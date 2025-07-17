@@ -8,6 +8,10 @@ from ladder_operator import angular_momentum_matrices
 if __name__=="__main__":
     Lx,Ly,Lz=angular_momentum_matrices(1)
 
+    # Test własciwości operatorów drabinkowych
+
+    '''
+    A to przesunąć do testu transorfm to Cartesian
     p_orb=np.array((
         (-1./np.sqrt(2),0.,1./np.sqrt(2) ),
         (-1.j/np.sqrt(2),0.,-1.j/np.sqrt(2) ),
@@ -40,3 +44,4 @@ if __name__=="__main__":
 
     H_SO[np.absolute(H_SO)< 1e-3]=0
     print(H_SO)
+    '''
