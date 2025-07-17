@@ -3,8 +3,8 @@
     Jak używać
     angular_momentum[wartość L][nazwa m_L]
     np.
-    angular_momentum[0.5]["z"]= np.array((1,0),(0,-1))
-    angular_momentum[2]["xz"] =....
+    angular_momentum["1/2"]["z"]= np.array((1,0),(0,-1))
+    angular_momentum["2"]["xz"] =....
 
 2) Zrobić testy (if __name__=="__main__":) -> w ramach jednego skrptu
     -) czy zwraca dobrą macierz ?
