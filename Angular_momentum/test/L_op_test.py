@@ -1,0 +1,1 @@
+#TODO: To samo co dla Pauliego ale dla L=całkowitego
