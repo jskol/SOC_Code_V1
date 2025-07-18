@@ -8,6 +8,42 @@ from ladder_operator import angular_momentum_matrices
 if __name__=="__main__":
     Lx,Ly,Lz=angular_momentum_matrices(1)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     # Test własciwości operatorów drabinkowych
 
     '''

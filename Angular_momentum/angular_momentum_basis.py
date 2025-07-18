@@ -16,13 +16,15 @@ print(nested_dict['dictA']['key_1'])
 ################################################################################
 import numpy as np
 
-angular_momentum = { "1/2": {
+
+angular_momentum_temporary = { "1/2": {
 							'x': np.array([[0,1],[1,0]], dtype=complex),
 							'y': 1j * np.array([[0,-1],[1,0]], dtype=complex),
 							'z': np.array([[1,0],[0,-1]], dtype=complex)
 							}
-
 }
+
+angular_momentum = {}
 
 # print("--------------")
 #print(angular_momentum['1/2']['x'])
@@ -69,15 +71,37 @@ def angular_momentum_matrices(l, hbar=1):
 
 	return Lx, Ly, Lz
 
-angular_momentum_matrices(0.5)
-Lx, Ly, Lz = angular_momentum_matrices(0.5)
+#angular_momentum_matrices(0.5)
+#Lx, Ly, Lz = angular_momentum_matrices(0.5)
 
-# print("Lx =\n", Lx)
-# print("Ly =\n", Ly)
-# print("Lz =\n", Lz)
 
-#print("end of file") #for tests
+def update_angular_momentum(l: float):
+	temp_dictionary = {}
+	temp_dictionary["x"], temp_dictionary["y"], temp_dictionary["z"] = angular_momentum_matrices(l)
+	#print("ang mom matrices = \n", temp_dictionary)
+	if l == 0.5:
+		temp_dictionary["0"] = np.eye(len(temp_dictionary["z"]))
+	return temp_dictionary
+
+range_of_l = [0.5, 1, 2]
+
+for l in range_of_l:
+	angular_momentum[l] = update_angular_momentum(l)
+
+#angular_momentum[0.5] = update_angular_momentum(0.5)
+# print("angular momentum [l=0.5] = \n", angular_momentum[0.5])
+# print("angular momentum [l=1] = \n", angular_momentum[1])
+
 
 if __name__=="__main__":
-	for key,value in angular_momentum['1/2'].items():
-		print('s=',key, " : \n ",value)
+	for outer_key, inner_dict in angular_momentum.items():
+		print(f"\n{outer_key}:")
+		for inner_key, value in inner_dict.items():
+			print(f"  {inner_key} = \n{value}")
+
+
+
+
+# if __name__=="__main__":
+# 	for key,value in angular_momentum['1/2'].items():
+# 		print('s=',key, " : \n ",value)
