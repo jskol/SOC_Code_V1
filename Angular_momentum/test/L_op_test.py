@@ -3,10 +3,15 @@
 import sys
 import numpy as np
 sys.path.append('..')
-from ladder_operator import angular_momentum
+from angular_momentum import AngularMomentum
 
-def angular_momentum_operator_test(l: float):
-    mats=[x for x in angular_momentum[l].items()]
+
+def angular_momentum_operator_test(l: float, angular_momentum):
+    try:
+        angular_momentum.basis[l]
+    except KeyError:
+        print('l=%.1f not found'%l)
+    mats=[x for x in angular_momentum.basis[l].items()]
     if l == 0.5:
         mats=mats[:-1] # To avoid s_0 in testing
 
@@ -40,7 +45,8 @@ def angular_momentum_operator_test(l: float):
         print("Testing if [S_%s,S_%s]=-iS_%s"%(mats[i][0],mats[(i+2)%len(mats)][0],mats[(i+1)%len(mats)][0])," : ", ~np.any(diff2))
 
 if __name__=="__main__":
-    L_set=[0.5,1,2]
-    for L in L_set:
-        print("\n ---> Testing for L=%.1f"%L)
-        angular_momentum_operator_test(L)
+    l_set=[0.5,1,2]
+    AngMom=AngularMomentum(l_set)
+    for l in l_set:
+        print("\n ---> Testing for l=%.1f"%l)
+        angular_momentum_operator_test(l,AngMom)
