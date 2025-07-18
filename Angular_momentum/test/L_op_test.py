@@ -1,5 +1,3 @@
-#TODO: To samo co dla Pauliego ale dla L=całkowitego
-
 import sys
 import numpy as np
 sys.path.append('..')

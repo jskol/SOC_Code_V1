@@ -8,13 +8,13 @@ class Atom:
         self.orbitals=orbitals
 
     def print_details(self):
-        print("Atom %s"%self.name)
+        print("Atom of %s"%self.name)
         print("composed of orbitals:" ,self.orbitals)
         print("is located at ",self.position)
 
 
 class UnitCell:
-    def __init__(self,list_of_atoms):
+    def __init__(self,list_of_atoms=[]):
         self.composition=[] # List allows for duplicates
         for atom in list_of_atoms:
             self.composition.append(atom)

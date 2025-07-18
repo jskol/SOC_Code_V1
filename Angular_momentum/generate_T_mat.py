@@ -4,12 +4,13 @@ import sys
 
 def generate_T_mat(l :float):
 	'''
-	Function return a transfer matrix from
+	Function returns a transfer matrix from
 	the Spherical Harmonic to Cartesian coordinates for 
 	a given l
 	'''
+	
 	#For every |number> in definition, we take it's complex conjugate,
-	#because elements in our matrix are in the form <number|cartesian>.
+	#because elements in our transfer matrix are in the form <number|cartesian>.
 	
 	if l==0:
 		res=np.array([1])
