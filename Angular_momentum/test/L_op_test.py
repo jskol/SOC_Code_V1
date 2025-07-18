@@ -6,7 +6,7 @@ sys.path.append('..')
 from angular_momentum import AngularMomentum
 
 
-def angular_momentum_operator_test(l: float, angular_momentum):
+def angular_momentum_operator_test(l: float, angular_momentum: AngularMomentum):
     try:
         angular_momentum.basis[l]
     except KeyError:
