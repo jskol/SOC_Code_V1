@@ -22,7 +22,7 @@ class AngularMomentum:
         '''
 
         for L,subspace in AngularMomentum.basis.items():
-            T_mat=np.matrix(get_T_mat(L))
+            T_mat=np.matrix(generate_T_mat(L))
             for name,mat in subspace.items():
                 subspace[name]=T_mat@mat@T_mat.H
 
