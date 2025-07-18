@@ -31,7 +31,9 @@ class AngularMomentum:
         '''
         print("\nIn the L=%.1f subspace angular momentum operators are given by"%l)
         for name,mat in AngularMomentum.basis[l].items():
-            print("L_%s:\n"%name, mat)
+            mat_temp=mat
+            mat_temp[np.absolute(mat_temp)<1e-3]=0
+            print("L_%s:\n"%name, mat_temp)
     
 
     def to_Cartesian(self):
@@ -42,6 +44,8 @@ class AngularMomentum:
         '''
 
         for l,subspace in AngularMomentum.basis.items():
+            if l==0.5:
+                continue
             T_mat=np.matrix(generate_T_mat(l))
             for name,mat in subspace.items():
                 subspace[name]=T_mat@mat@T_mat.H
@@ -52,5 +56,7 @@ class AngularMomentum:
 if __name__=="__main__":
     l_vals=[0.5,1]
     AM=AngularMomentum(l_vals)
-    AM.print(l_vals[1])
-    
+    AM.print(l_vals[-1])
+
+    AM.to_Cartesian()
+    AM.print(l_vals[-1])
