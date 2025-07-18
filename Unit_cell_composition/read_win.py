@@ -34,10 +34,17 @@ def get_projections(file_name="wannier90.win"):
 def get_compostion(comp: dict ,file_name="wannier90.win")-> UnitCell:
     f=open(file_name,'r')
     res=UnitCell()
+    
+    import re
+    
+
     comp_flag=False
     #generate vector of multiplicities
     for line in f.readlines():
-        if(line.rstrip() == "end atoms_cart"):
+        # special care as the wannier can have 
+        # positions of atoms in "cart" -Cartesian
+        # or fractions of primit shifts "frac"
+        if( re.search(r'end atoms_',line.rstrip())):
             break
         if(comp_flag):
             current_line=line.split()
@@ -52,7 +59,13 @@ def get_compostion(comp: dict ,file_name="wannier90.win")-> UnitCell:
                 orbitals=comp[el_name]
                 atom_temp=Atom(name=el_name,orbitals=orbitals,position=position)
                 res.add_atom(atom_temp)            
-        if(line.rstrip() == "begin atoms_cart"):
+        if(re.search(r'begin atoms_', line.rstrip()) ):
             comp_flag=True   
     f.close()
+    return res
+
+
+def composition_wrapper(file_name="wannier90.win")-> UnitCell:
+    projetions_dict=get_projections(file_name)
+    res=get_compostion(projetions_dict,file_name)
     return res
