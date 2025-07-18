@@ -48,7 +48,7 @@ def get_compostion(comp: dict ,file_name="wannier90.win")-> UnitCell:
             else:
                 position=[]
                 for i in np.arange(3):
-                    position.append(current_line[1+i])
+                    position.append(float(current_line[1+i]))
                 orbitals=comp[el_name]
                 atom_temp=Atom(name=el_name,orbitals=orbitals,position=position)
                 res.add_atom(atom_temp)            

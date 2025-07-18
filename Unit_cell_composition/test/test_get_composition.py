@@ -13,3 +13,4 @@ if __name__=="__main__":
 
     unit_cell=get_compostion(proj)
     unit_cell.print_composition()
+    unit_cell.plot_unit_cell()
