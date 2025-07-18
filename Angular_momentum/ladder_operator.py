@@ -29,7 +29,7 @@ def angular_momentum_matrices(l, hbar=1):
 
 	return Lx, Ly, Lz
 
-angular_momentum={}
+
 
 def update_angular_momentum(l: float):
 	temp_dictionary = {}
@@ -39,13 +39,12 @@ def update_angular_momentum(l: float):
 		temp_dictionary["0"] = np.eye(len(temp_dictionary["z"]))
 	return temp_dictionary
 
-range_of_l = [0.5, 1, 2]
-
-for l in range_of_l:
-	angular_momentum[l] = update_angular_momentum(l)
-
-
 if __name__=="__main__":
+	range_of_l = [0.5, 1, 2]
+	angular_momentum={}
+	for l in range_of_l:
+		angular_momentum[l] = update_angular_momentum(l)
+		
 	for outer_key, inner_dict in angular_momentum.items():
 		print(f"\n{outer_key}:")
 		for inner_key, value in inner_dict.items():

@@ -1,16 +1,20 @@
 import numpy as np
 
+#helper functions
+
+from generate_T_mat import generate_T_mat
+from ladder_operator import update_angular_momentum
 
 class AngularMomentum:
-    basis={{}}
+    basis={}
     
-    def __init__(self,L_values):
-        for L in L_values:
-            AngularMomentum.basis[L]=update_angular_momentum(L)
+    def __init__(self,l_values):
+        for l in l_values:
+            AngularMomentum.basis[l]=update_angular_momentum(l)
     
-    def print(self,L):
-        print(" In the L=%.1f subspace angular momentum operators are given by\n"%L)
-        for name,mat in AngularMomentum.basis[L].items():
+    def print(self,l):
+        print("\nIn the L=%.1f subspace angular momentum operators are given by"%l)
+        for name,mat in AngularMomentum.basis[l].items():
             print("L_%s:\n"%name, mat)
     
 
@@ -21,9 +25,15 @@ class AngularMomentum:
         to the Cartesian space
         '''
 
-        for L,subspace in AngularMomentum.basis.items():
-            T_mat=np.matrix(generate_T_mat(L))
+        for l,subspace in AngularMomentum.basis.items():
+            T_mat=np.matrix(generate_T_mat(l))
             for name,mat in subspace.items():
                 subspace[name]=T_mat@mat@T_mat.H
 
 
+
+
+if __name__=="__main__":
+    l_vals=[0.5,1]
+    AM=AngularMomentum(l_vals)
+    AM.print(l_vals[1])
