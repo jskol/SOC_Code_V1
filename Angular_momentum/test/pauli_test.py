@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 sys.path.append('..')
-from angular_momentum_basis import angular_momentum
+from ladder_operator import angular_momentum
 
 
 for key,value in angular_momentum[0.5].items():
