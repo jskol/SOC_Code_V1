@@ -8,6 +8,15 @@ allowed_orbital_names=[
 ]
 
 def get_projections(file_name="wannier90.win"):
+    '''
+    Function extracting projections
+    used in Wannierization procedure
+
+    Returns:
+    dictionary with the element name and its set of 
+    orbitals it is projected onto within the 
+    Wannierization
+    '''
     f=open(file_name,'r')
     comp={}
     projectors_flag=False
@@ -20,7 +29,7 @@ def get_projections(file_name="wannier90.win"):
             #temp[0] -name of the element
             #temp[1] - name of the orbital
             #the rest of the line is irrelevant
-            ang_mtm=temp[1].strip()
+            ang_mtm=temp[1].strip() # remove whitespaces
             if ang_mtm in allowed_orbital_names:
                 element_name=comp.get(temp[0])
                 if element_name == None:
@@ -46,6 +55,14 @@ def get_projections(file_name="wannier90.win"):
 
 #Update compostion by multiplicity of each atom type
 def get_compostion(comp: dict ,file_name="wannier90.win")-> UnitCell:
+    '''
+    function extracting the composition of unit cell
+    taking into consideration the projections used in the 
+    Wannierization. 
+    
+    Returns:
+    A UnitCell object, which is a list of Atoms (objects with a name, set of projections, and its position)
+    '''
     f=open(file_name,'r')
     res=UnitCell()
     
