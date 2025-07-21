@@ -15,16 +15,16 @@ def get_projections(file_name="wannier90.win"):
             #temp[1] - name of the orbital
             #the rest of the line is irrelevant
 
-            el=comp.get(temp[0])
-            if el == None:
+            element_name=comp.get(temp[0])
+            if element_name == None:
                 comp.update({temp[0] : [temp[1]]}) # Add new atom
             else:
                 new_data = comp.get(temp[0])
                 new_data.append(temp[1])
 
         if(line.rstrip() == "begin projections"):
-            projectors_flag=True
-    
+                    projectors_flag=True
+
     f.close()
 
     return comp
@@ -36,8 +36,6 @@ def get_compostion(comp: dict ,file_name="wannier90.win")-> UnitCell:
     res=UnitCell()
     
     import re
-    
-
     comp_flag=False
     #generate vector of multiplicities
     for line in f.readlines():
@@ -46,6 +44,7 @@ def get_compostion(comp: dict ,file_name="wannier90.win")-> UnitCell:
         # or fractions of primit shifts "frac"
         if( re.search(r'end atoms_',line.rstrip())):
             break
+
         if(comp_flag):
             current_line=line.split()
             el_name=current_line[0]
@@ -53,14 +52,16 @@ def get_compostion(comp: dict ,file_name="wannier90.win")-> UnitCell:
             if(el==None):
                 continue # irrelevant atom
             else:
+                #Construnting Atom-object (name,position, orbitals)
                 position=[]
                 for i in np.arange(3):
                     position.append(float(current_line[1+i]))
                 orbitals=comp[el_name]
                 atom_temp=Atom(name=el_name,orbitals=orbitals,position=position)
                 res.add_atom(atom_temp)            
+        
         if(re.search(r'begin atoms_', line.rstrip()) ):
-            comp_flag=True   
+            comp_flag=True
     f.close()
     return res
 
