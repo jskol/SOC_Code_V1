@@ -1,6 +1,12 @@
 import numpy as np
 from UnitCell import UnitCell,Atom
 
+allowed_orbital_names=[
+'s',
+'px','py','pz','p',
+'dxy','dyz','dxz','dx2-y2','dz2','d'
+]
+
 def get_projections(file_name="wannier90.win"):
     f=open(file_name,'r')
     comp={}
@@ -14,20 +20,28 @@ def get_projections(file_name="wannier90.win"):
             #temp[0] -name of the element
             #temp[1] - name of the orbital
             #the rest of the line is irrelevant
-
-            element_name=comp.get(temp[0])
-            if element_name == None:
-                comp.update({temp[0] : [temp[1]]}) # Add new atom
+            ang_mtm=temp[1].strip()
+            if ang_mtm in allowed_orbital_names:
+                element_name=comp.get(temp[0])
+                if element_name == None:
+                    if ang_mtm == 'p':
+                        comp.update({temp[0]: ['px','py','pz']})
+                    elif ang_mtm == 'd':
+                        comp.update({temp[0]: ['dxy','dyz','dxz','dx2-y2','dz2']})
+                    else:
+                        comp.update({temp[0] : [ang_mtm]}) # Add new atom
+                else:
+                    new_data = comp.get(temp[0])
+                    new_data.append(ang_mtm)
             else:
-                new_data = comp.get(temp[0])
-                new_data.append(temp[1])
-
+                exit('Unknown orbital name %s'%temp[1])
+        
         if(line.rstrip() == "begin projections"):
                     projectors_flag=True
-
     f.close()
-
     return comp
+
+
 
 
 #Update compostion by multiplicity of each atom type
