@@ -1,6 +1,4 @@
 import numpy as np
-import re
-from itertools import islice
 
 class Wannier_data:
 	def __init__(self,argv):
