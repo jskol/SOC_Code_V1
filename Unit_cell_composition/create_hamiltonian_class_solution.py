@@ -37,7 +37,13 @@ def get_parameters(filename="wannier90_hr.dat"):
 
 def create_hamiltonian(*filenames):
 	'''
-	Function calculating hamiltonian for given files.
+	Function Reading the tight-binding Hamiltonian matrix elements
+	
+	Input(optional):
+	-list of file names (from zero to two)
+	-if len(input)==0 both spin channels get parameters from a default file name 'wannier90_hr.dat'
+	-if len(input)==1 both spin channels get parameters from a specified file name
+	-if len(input)==2 first file gives parameters for the spin-UP channel and the ohter file for the spin DOWN
 	'''
 	#print("len(filenames) = ", len(filenames))
 	if (len(filenames) == 1):	#if we pas 1 file, both are the same
@@ -71,6 +77,12 @@ def create_hamiltonian(*filenames):
 	col_L,col_R=[],[]	# Store here simultanously two consecutive cols
 	for data_up,data_down in zip(M_up,M_down):
 
+		### Check spin-up and spin-down data complince ########
+		for ind in np.arange(5):
+			if data_up[ind] != data_down[ind]:
+				raise Exception("The two data files do not align\n Error occured for:\n", data_up, "\n", data_down)
+		########################################################
+		
 		Upper_Left_ind1=int(spin_degeneracy*(data_up[3]-1)+1)
 		Upper_Left_ind2=int(spin_degeneracy*(data_up[4]-1)+1)	
 		r_vec=[data_up[0],data_up[1],data_up[2]] #store \vec{R} components
@@ -91,7 +103,10 @@ def create_hamiltonian(*filenames):
 					col_R.append(Wannieraized)
 
 		iterator += 1
-		if iterator % num_wann==0: # once the col_L and col_R are filled with 2*num_wannier concatinate the two cols
+
+		# ####### once the col_L and col_R are filled 
+		# ####### with 2*num_wannier concatinate the two cols
+		if iterator % num_wann==0:
 			for at in col_L:
 				res.append(at)
 			col_L=[]
@@ -99,7 +114,7 @@ def create_hamiltonian(*filenames):
 			for at in col_R:
 				res.append(at)
 			col_R=[]
-
+		#####################################################
 	return res
 
 
