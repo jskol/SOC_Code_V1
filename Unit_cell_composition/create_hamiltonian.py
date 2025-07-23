@@ -34,7 +34,6 @@ def create_hamiltonian(*filenames):
 	'''
 	Function calculating hamiltonian for given files.
 	'''
-	#print("len(filenames) = ", len(filenames))
 	if (len(filenames) == 1):	#if we pas 1 file, both are the same
 		spin_up_file = filenames[0]
 		spin_down_file = filenames[0]
@@ -60,8 +59,21 @@ def create_hamiltonian(*filenames):
 
 	M_up = np.loadtxt(spin_up_file, skiprows=skiplines)#[:,3:]
 	M_down = np.loadtxt(spin_down_file, skiprows=skiplines)#[:,3:]
-	res=[]	
+	res=[]
+
 	for r_pnt_in in np.arange(nrpts):
+
+		# Check if up and down data is compliant
+		for ind in np.arange(5):
+			#print(M_up[r_pnt_in][ind], "\n", M_down[r_pnt_in][ind])
+			if M_up[r_pnt_in][ind] != M_down[r_pnt_in][ind]:
+				raise Exception("Data files do not align:\n", M_up[r_pnt_in], "\n", M_down[r_pnt_in])
+				# When there is inconsistency further in file 
+				# (from around line=1000 and further), this condition 
+				# will not find an error.
+				# However, for lines at the beginning of the file it finds 
+				# the inconsistency.
+
 		H_merge=np.zeros((spin_degeneracy*num_wann,spin_degeneracy*num_wann),dtype='complex')
 		ref_point=r_pnt_in*(num_wann**2)
 		for sm_ind in np.arange(num_wann**2):
@@ -89,7 +101,6 @@ def create_hamiltonian_original(*filenames):
 	'''
 	Function calculating hamiltonian for given files.
 	'''
-	#print("len(filenames) = ", len(filenames))
 	if (len(filenames) == 1):	#if we pas 1 file, both are the same
 		spin_up_file = filenames[0]
 		spin_down_file = filenames[0]
@@ -115,6 +126,7 @@ def create_hamiltonian_original(*filenames):
 
 	M_up = np.loadtxt(spin_up_file, skiprows=skiplines)#[:,3:]
 	M_down = np.loadtxt(spin_down_file, skiprows=skiplines)#[:,3:]
+
 	res=[]	
 	for r_pnt_in in np.arange(nrpts):
 		H_merge=np.zeros((spin_degeneracy*num_wann,spin_degeneracy*num_wann),dtype='complex')
@@ -143,20 +155,26 @@ def create_hamiltonian_original(*filenames):
 
 if (__name__=="__main__"):
 
-	file_name='test/wannier90_up_hr.dat'
-	merged=create_hamiltonian(file_name)
+	file_name='test/wannier90_up_hr_broken.dat'
+	file_name2='test/wannier90_down_hr.dat'
+	merged=create_hamiltonian(file_name, file_name2)
+	#merged=create_hamiltonian_original(file_name)
+
 	num_wann, nrpts = get_parameters(file_name)
 	
-	for r in np.arange(nrpts):
-		range_l=int(r*(2*num_wann)**2)
-		range_h=int((r+1)*(2*num_wann)**2)
-		mat=(merged[range_l:range_h][:,-2]+1.j*merged[range_l:range_h][:,-1]).reshape((int(2*num_wann),int(2*num_wann)))
+	for sets in merged:
+		print(sets.to_Wannier())
+
+	# for r in np.arange(nrpts):
+	# 	range_l=int(r*(2*num_wann)**2)
+	# 	range_h=int((r+1)*(2*num_wann)**2)
+	# 	mat=(merged[range_l:range_h][:,-2]+1.j*merged[range_l:range_h][:,-1]).reshape((int(2*num_wann),int(2*num_wann)))
 		
-		print("Testing r #: %i"%r)
-		for i  in np.arange(2*num_wann,step=2):
-			if (mat[i][i] != mat[i+1][i+1] or mat[i][i+1]!=mat[i][i+1]):
-				print(mat[i][i], " : " ,mat[i+1][i+1])
-				print(mat[i][i+1], " : ", mat[i][i+1])
+	# 	print("Testing r #: %i"%r)
+	# 	for i  in np.arange(2*num_wann,step=2):
+	# 		if (mat[i][i] != mat[i+1][i+1] or mat[i+1][i]!=mat[i][i+1]):
+	# 			print(mat[i][i], " : " ,mat[i+1][i+1])
+	# 			print(mat[i+1][i], " : ", mat[i][i+1])
 
 	'''
 	for r in np.arange(nrpts):
@@ -171,5 +189,5 @@ if (__name__=="__main__"):
 	'''
 
 
-	for line in merged:
-		print ("%i %i %i %i %i %.6f %.6f"%(line[0],line[1],line[2],line[3],line[4],line[5],line[6]))
+	# for line in merged:
+	# 	print ("%i %i %i %i %i %.6f %.6f"%(line[0],line[1],line[2],line[3],line[4],line[5],line[6]))
