@@ -43,7 +43,6 @@ def create_hamiltonian(*filenames):
 	-if len(input)==1 both spin channels get parameters from a specified file name
 	-if len(input)==2 first file gives parameters for the spin-UP channel and the ohter file for the spin DOWN
 	'''
-	#print("len(filenames) = ", len(filenames))
 	if (len(filenames) == 1):	#if we pas 1 file, both are the same
 		spin_up_file = filenames[0]
 		spin_down_file = filenames[0]
