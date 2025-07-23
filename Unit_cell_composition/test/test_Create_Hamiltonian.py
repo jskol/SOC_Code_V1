@@ -1,21 +1,31 @@
 import sys
 import numpy as np
 sys.path.append('..')
-
+sys.path.append('../../Misc')
 from create_hamiltonian_class_solution import create_hamiltonian,get_parameters
 from create_hamiltonian import create_hamiltonian_original
+from timing import timing
+
+@timing
+def timed_create_hamiltonian(*filenames):
+    res=create_hamiltonian(*filenames)
+    return res
+@timing
+def timed_create_hamiltonian_original(*filenames):
+    res=create_hamiltonian_original(*filenames)
+    return res
 
 
 if __name__=="__main__":
     file_name='wannier90_up_hr.dat'
     num_wann, nrpts = get_parameters(file_name)
     ## basic check of reading one file
-    read_class_no_name=create_hamiltonian()
+    read_class_no_name=timed_create_hamiltonian()
     if(len(read_class_no_name) == nrpts*(2*num_wann)**2):
         print("Reading Hamiltonian from the default name worked !")
     else:
         exit("Issues with reading the defule file")
-    read_class=create_hamiltonian(file_name)
+    read_class=timed_create_hamiltonian(file_name)
     if(len(read_class) == nrpts*(2*num_wann)**2):
         print("Reading from single file for both spin channesl worked !")
     else:
