@@ -61,8 +61,7 @@ def create_hamiltonian(*filenames):
 	M_down = np.loadtxt(spin_down_file, skiprows=skiplines)#[:,3:]
 	res=[]
 
-	for r_pnt_in in np.arange(nrpts):
-
+	for r_pnt_in in np.arange(nrpts*(num_wann**2)):
 		# Check if up and down data is compliant
 		for ind in np.arange(5):
 			#print(M_up[r_pnt_in][ind], "\n", M_down[r_pnt_in][ind])
@@ -74,6 +73,7 @@ def create_hamiltonian(*filenames):
 				# However, for lines at the beginning of the file it finds 
 				# the inconsistency.
 
+	for r_pnt_in in np.arange(nrpts):
 		H_merge=np.zeros((spin_degeneracy*num_wann,spin_degeneracy*num_wann),dtype='complex')
 		ref_point=r_pnt_in*(num_wann**2)
 		for sm_ind in np.arange(num_wann**2):
@@ -188,6 +188,3 @@ if (__name__=="__main__"):
 				print(mat[i][i+1], " : ", mat[i][i+1])
 	'''
 
-
-	# for line in merged:
-	# 	print ("%i %i %i %i %i %.6f %.6f"%(line[0],line[1],line[2],line[3],line[4],line[5],line[6]))
