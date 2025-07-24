@@ -11,7 +11,10 @@ class Wannier_data:
 		self.z=int(argv[2])
 		self.o1=int(argv[3])
 		self.o2=int(argv[4])
-		self.hop=argv[5]+1.j*argv[6]
+		if( len(argv)<6):
+			self.hop=0.0+1.j*0.
+		else:
+			self.hop=argv[5]+1.j*argv[6]
 
 	def __str__(self):
 		return f"{self.x} {self.y} {self.z} {self.o1} {self.o2} {self.hop}"
@@ -93,7 +96,7 @@ def create_hamiltonian(*filenames):
 		inds = [up_ind_1, up_ind_2]
 		col.append(Wannier_data(r_vec + inds + hop))
 		# appending spin_up
-
+		# Adding zeros
 		inds = [up_ind_1, up_ind_2 + 1]
 		col.append(Wannier_data(r_vec + inds + [0.,0.]))
 

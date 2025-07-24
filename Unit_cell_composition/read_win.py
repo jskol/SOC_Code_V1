@@ -33,7 +33,9 @@ def get_projections(file_name="wannier90.win"):
             if ang_mtm in allowed_orbital_names:
                 element_name=comp.get(temp[0])
                 if element_name == None:
-                    if ((ang_mtm == 'p') or (ang_mtm == 'l=1')):
+                    if((ang_mtm == 's') or (ang_mtm == 'l=0')):
+                        comp.update({temp[0]: ['s']})
+                    elif ((ang_mtm == 'p') or (ang_mtm == 'l=1')):
                         comp.update({temp[0]: ['px','py','pz']})
                     elif ((ang_mtm == 'd') or (ang_mtm == 'l=2')):
                         comp.update({temp[0]: ['dxy','dyz','dxz','dx2-y2','dz2']})

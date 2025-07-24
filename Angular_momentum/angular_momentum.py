@@ -54,9 +54,10 @@ class AngularMomentum:
 
 
 if __name__=="__main__":
-    l_vals=[0.5,1]
+    l_vals=[0., 0.5,1]
     AM=AngularMomentum(l_vals)
     AM.print(l_vals[-1])
+    AM.print(l_vals[0])
 
     AM.to_Cartesian()
     AM.print(l_vals[-1])
