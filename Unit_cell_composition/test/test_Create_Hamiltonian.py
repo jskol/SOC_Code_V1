@@ -46,7 +46,8 @@ if __name__=="__main__":
             read_class=func(file_name,'wannier90_up_hr_broken.dat')
         except:
             print("Test Passed for %s-> Execption about the data missalignment thrown"%func.__name__)   
-    
+        else:
+            exit("Data misaligment test Failed")
 
     ## Compare with the old way
     read_old=create_hamiltonian_original(file_name)
