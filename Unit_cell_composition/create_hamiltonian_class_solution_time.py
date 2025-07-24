@@ -76,16 +76,16 @@ def create_hamiltonian(*filenames):
 	iterator=0
 	col_L,col_R=[],[]	# Store here simultanously two consecutive cols
 	###################################
-	start = time.time()	##
+	#start = time.time()	##
 	for data_up,data_down in zip(M_up,M_down):
 
 		### Check spin-up and spin-down data complince ########
-		start = time.time()	##
+		# start = time.time()	##
 		for ind in np.arange(5):
 			if data_up[ind] != data_down[ind]:
 				raise Exception("The two data files do not align\n Error occured for:\n", data_up, "\n", data_down)
-		end = time.time()
-		print(colored("checking data compliancy = ", "green"), end - start, "sec")
+		# end = time.time()
+		# print(colored("checking data compliancy = ", "green"), end - start, "sec")
 
 		########################################################
 		
@@ -93,7 +93,7 @@ def create_hamiltonian(*filenames):
 		Upper_Left_ind2=int(spin_degeneracy*(data_up[4]-1)+1)	
 		r_vec=[data_up[0],data_up[1],data_up[2]] #store \vec{R} components
 		###################################
-		start4 = time.time()
+		# start4 = time.time()
 		for move_down in np.arange(spin_degeneracy):
 			for move_right in np.arange(spin_degeneracy): # loops over 2x2 matrix
 				inds=[Upper_Left_ind1+ move_down,Upper_Left_ind2+ move_right] # store the new indices
@@ -109,36 +109,58 @@ def create_hamiltonian(*filenames):
 					col_L.append(Wannieraized)
 				else:
 					col_R.append(Wannieraized)
-		end4 = time.time()
-		print(colored("for move_down in np.arange(spin_degeneracy): ", "green"), end4 - start4, "sec")
+		# print("col_L:")
+		# for w in col_L:
+		# 	print(w)
+
+		# print("col_R:")
+		# for w in col_R:
+		# 	print(w)
+
+		#break ####
+		# end4 = time.time()
+		# print(colored("for move_down in np.arange(spin_degeneracy): ", "green"), end4 - start4, "sec")
 		
 		iterator += 1
 
 		# ####### once the col_L and col_R are filled 
 		# ####### with 2*num_wannier concatinate the two cols
 		if iterator % num_wann==0:
+			#print("full_col_L:")
 			for at in col_L:
 				res.append(at)
+				#print(at)
 			col_L=[]
-
+			#print("full_col_R:")
 			for at in col_R:
 				res.append(at)
+				#print(at)
 			col_R=[]
-		break ###
+
+			#break ###
 		#####################################################
 
-	end = time.time()
-	print(colored("for data_up,data_down in zip(M_up,M_down): ", "green"), end - start, "sec")
+	# end = time.time()
+	# print(colored("ALL code = ", "green"), end - start, "sec")
 	###################################
 	return res
 
 
 if (__name__=="__main__"):
 
-	file_name='test/wannier90_up_hr.dat'
-	merged=create_hamiltonian(file_name)
-	num_wann, nrpts = get_parameters(file_name)
+	# file_name='test/wannier90_up_hr.dat'
+	# merged=create_hamiltonian(file_name)
 
+	file_name='test/wannier90_up_hr.dat'
+	file_name2='test/wannier90_down_hr.dat'
+
+	start_all = time.time()
+	merged=create_hamiltonian(file_name, file_name2)
+	end_all = time.time()
+	print(colored("All the code JS = : ", "green"), end_all - start_all, "sec")
+
+	# num_wann, nrpts = get_parameters(file_name)
+	# print("type(merged) = ", type(merged))
 	# for sets in merged:
 	# 	print(sets.to_Wannier())
 		
