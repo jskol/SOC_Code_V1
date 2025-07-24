@@ -7,7 +7,10 @@ class Wannier_data:
 		self.z=int(argv[2])
 		self.o1=int(argv[3])
 		self.o2=int(argv[4])
-		self.hop=argv[5]+1.j*argv[6]
+		if( len(argv)<6):
+			self.hop=0.0
+		else:
+			self.hop=argv[5]+1.j*argv[6]
 
 	def __str__(self):
 		return f"{self.x} {self.y} {self.z} {self.o1} {self.o2} {self.hop}"
