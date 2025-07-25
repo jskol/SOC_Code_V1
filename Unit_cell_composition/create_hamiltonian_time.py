@@ -21,7 +21,7 @@ class Wannier_data:
 
 	def to_Wannier(self):
 		hopping=self.hop
-		return [self.x, self.y, self.z, self.o1, self.o2, np.real(hopping),np.imag(hopping)]		
+		return [self.x, self.y, self.z, self.o1, self.o2, np.real(hopping),np.imag(hopping)]
 
 def get_parameters(filename="wannier90_hr.dat"):
 	'''
@@ -65,7 +65,6 @@ def create_hamiltonian(*filenames):
 	M_up = np.loadtxt(spin_up_file, skiprows=skiplines)#[:,3:]
 	M_down = np.loadtxt(spin_down_file, skiprows=skiplines)#[:,3:]
 
-	# startt = time.time()	##
 	for data_up,data_down in zip(M_up,M_down):
 
 		### Check spin-up and spin-down data complince ########
@@ -73,11 +72,7 @@ def create_hamiltonian(*filenames):
 		for ind in np.arange(5):
 			if data_up[ind] != data_down[ind]:
 				raise Exception("The two data files do not align\n Error occured for:\n", data_up, "\n", data_down)
-				# print("The two data files do not align\n Error occured for:\n", data_up, "\n", data_down)
-	# endd = time.time()
-	# print(colored("checking data compliancy = ", "green"), endd - startt, "sec")
 
-	#start = time.time()	##
 	col, res = [], []
 	iterator = 0
 	for data_up,data_down in zip(M_up,M_down): #O(nrpts*nw^2)
@@ -96,7 +91,7 @@ def create_hamiltonian(*filenames):
 		inds = [up_ind_1, up_ind_2]
 		col.append(Wannier_data(r_vec + inds + hop))
 		# appending spin_up
-		# Adding zeros
+		# Adding zeros:
 		inds = [up_ind_1, up_ind_2 + 1]
 		col.append(Wannier_data(r_vec + inds + [0.,0.]))
 
@@ -121,11 +116,6 @@ def create_hamiltonian(*filenames):
 			for elem in col:
 				res.append(elem)
 			col = []
-			#break
-
-	#end = time.time()
-	#print(colored("for r_pnt_in in np.arange(nrpts): ", "green"), end - start, "sec")
-	###################################
 	return res
 
 def create_hamiltonian_2(*filenames):
@@ -158,17 +148,13 @@ def create_hamiltonian_2(*filenames):
 	M_up = np.loadtxt(spin_up_file, skiprows=skiplines)#[:,3:]
 	M_down = np.loadtxt(spin_down_file, skiprows=skiplines)#[:,3:]
 
-	# startt = time.time()	##
 	for data_up,data_down in zip(M_up,M_down):
 
 		### Check spin-up and spin-down data complince ########
 		start = time.time()	##
 		for ind in np.arange(5):
 			if data_up[ind] != data_down[ind]:
-				#raise Exception("The two data files do not align\n Error occured for:\n", data_up, "\n", data_down)
-				print("The two data files do not align\n Error occured for:\n", data_up, "\n", data_down)
-	# endd = time.time()
-	# print(colored("checking data compliancy = ", "green"), endd - startt, "sec")
+				raise Exception("The two data files do not align\n Error occured for:\n", data_up, "\n", data_down)
 
 	#start = time.time()	##
 	col, res = [], []
@@ -195,26 +181,19 @@ def create_hamiltonian_2(*filenames):
 		col.append(Wannier_data(r_vec + inds + hop))
 		# appending spin_down
 
-		# col.sort(key=lambda w: (w.o2, w.o1)) # O(n*log(n))
-		#####
-
-		#####
 		iterator += 1
 		if iterator % num_wann==0:
-			###
-			print("col:")
-			for w in col:
-				print(w)
-			#break
-			col.sort(key=lambda w: (w.o2, w.o1)) # O(n*log(n))
+			for i in np.arange(spin_degeneracy*num_wann):  # Use while to accommodate growing list
+				hop=[0.,0.]
+				if int(col[i].o1) % 2 == 0:  # Example condition: even number
+					val_to_pop = col.pop(i)
+					col.insert(i, Wannier_data(r_vec+[val_to_pop.o1, val_to_pop.o2-1]+hop)) #inserting zero inside the list
+
+					col.append(Wannier_data(r_vec+[val_to_pop.o1-1, val_to_pop.o2]+hop))
+					col.append(val_to_pop) #appending element to the end
 			for elem in col:
 				res.append(elem)
 			col = []
-			break ###
-
-	#end = time.time()
-	#print(colored("for r_pnt_in in np.arange(nrpts): ", "green"), end - start, "sec")
-	###################################
 	return res
 
 
@@ -278,7 +257,7 @@ if (__name__=="__main__"):
 
 	file_name='test/wannier90_up_hr.dat'
 	file_name2='test/wannier90_down_hr.dat'
-	merged=create_hamiltonian(file_name, file_name2)
+	merged=create_hamiltonian_2(file_name, file_name2)
 	#merged=create_hamiltonian_original(file_name)
 
 	num_wann, nrpts = get_parameters(file_name)

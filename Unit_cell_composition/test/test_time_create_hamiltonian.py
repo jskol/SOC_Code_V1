@@ -8,7 +8,7 @@ from create_hamiltonian_time import create_hamiltonian_original,create_hamiltoni
 
 filename='wannier90_up_hr.dat'
 
-func_names=[create_hamiltonian_original,create_hamiltonian,CH_JS]
+func_names=[create_hamiltonian_original,create_hamiltonian, create_hamiltonian_2, CH_JS]
 
 for func_name in func_names[1:]:
     start = time.time()
@@ -16,7 +16,7 @@ for func_name in func_names[1:]:
     end = time.time()
     print(colored("%s: "%func_name.__name__, "green"), end - start, "sec")
 
-data_ref=func_names[-2](filename)
+data_ref=func_names[-2](filename) # create_hamiltonian_2
 
 
 for line1,line2 in zip(data,data_ref):
