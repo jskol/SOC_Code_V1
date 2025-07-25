@@ -54,9 +54,10 @@ def generate_H_SOC(filename):
 	print("np.shape(H_SOC) = ", np.shape(H_SOC))
 	
 	ref_point=0
+
 	for atom in comp.composition(): # iterate over atoms
 		temp_orbitals=atom.orbitals
-		L_op_set=...
+		#L_op_set=...
 		temp_SOC_mat=np.zeros((L_op_set[0].shape[0]*S[0].shape[0],L_op_set[0].shape[0]*S[0].shape[0]),dtype=complex)
 		
 		## Generate SOC for one atom
@@ -69,22 +70,6 @@ def generate_H_SOC(filename):
 				H_SOC[ref_point+i][ref_point+j] = temp_SOC_mat[i][j]
 		
 		ref_point += temp_SOC_mat.shape[0]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
