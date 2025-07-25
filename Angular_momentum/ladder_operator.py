@@ -32,6 +32,8 @@ def angular_momentum_matrices(l, hbar=1):
 	Ly = -0.5j * (L_plus - L_minus)
 
 	return Lx, Ly, Lz
+def get_L_degeneracy(l: float)-> int:
+	return int(2*l+1)
 
 
 

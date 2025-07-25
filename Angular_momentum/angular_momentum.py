@@ -14,14 +14,13 @@ class AngularMomentum:
     AngularMomentum.basis[l:float][y] - returns L_y matrix
     AngularMomentum.basis[l:float][z] - returns L_z matrix
     '''
-    
-    basis={}
-    
+        
     def __init__(self,l_values):
         '''
         Constructs set of L operators (L_x,L_y,L_z) for all
         l-values given in l_values list 
         '''
+        self.basis={}
         for l in l_values:
             AngularMomentum.basis[l]=update_angular_momentum(l)
     

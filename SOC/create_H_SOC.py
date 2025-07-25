@@ -1,14 +1,15 @@
 import sys
+import re
+import numpy as np
+
 #sys.path.append('../')
-sys.path.insert(0, '../Angular_momentum')
-from ladder_operator import angular_momentum_matrices
-sys.path.insert(0, '../Unit_cell_composition')
+sys.path.append('../Angular_momentum')
+from ladder_operator import angular_momentum_matrices,get_L_degeneracy
+
+sys.path.append('../Unit_cell_composition')
 from create_hamiltonian_time import create_hamiltonian, get_parameters
 from UnitCell import UnitCell, Atom
 from read_win import get_projections, get_composition, composition_wrapper
-import re
-
-import numpy as np
 
 def generate_H_SOC(filename):
 	'''
@@ -27,11 +28,13 @@ def generate_H_SOC(filename):
 	print("s_up = ", spin_up_file)		###
 	print("s_down = ", spin_down_file)	###
 	'''
-	spin_degeneracy = 2
+	#spin_degeneracy = get_L_degeneracy(0.5)
 	# num_wann, nrpts = get_parameters(spin_up_file)
 	# print("num_wann, nrpts = ", num_wann, ", ", nrpts)	###
 
 	S = angular_momentum_matrices(0.5)
+	spin_degeneracy=S[0].shape[0]
+	assert spin_degeneracy == get_L_degeneracy(0.5)
 	print("S = \n", S)
 
 	comp = {}
@@ -39,26 +42,36 @@ def generate_H_SOC(filename):
 	comp.print_composition()
 
 	f=open(filename,'r')
-	for line in f.readlines():
-	# special care as the wannier can have 
-	# positions of atoms in "cart" -Cartesian
-	# or fractions of primit shifts "frac"
-
-		# to chyba niepotrzebne:
-		if(re.search(r'num_wann',line.rstrip())):
-			#print("replace line")
-			num_wann = int(line.replace('num_wann', '').replace(' ', '').replace('=', ''))
-			# there was an easier way
-			print("num_wann = ", num_wann)
-			break
-
-		
-
 	
-	#num_wann = 16
-	H_SOC = np.zeros((spin_degeneracy*num_wann, spin_degeneracy*num_wann), dtype=complex)
+	### Testing calculating number of Wanniers used in the projection
+
+	num_wann=comp.get_num_wann()
+	assert num_wann == 16
+	num_spin_wann=spin_degeneracy*num_wann
+
+	H_SOC = np.zeros((num_spin_wann,num_spin_wann), dtype=complex)
 	print("H_SOC = \n", H_SOC)
 	print("np.shape(H_SOC) = ", np.shape(H_SOC))
+	
+	ref_point=0
+	for atom in comp.composition(): # iterate over atoms
+		temp_orbitals=atom.orbitals
+		L_op_set=...
+		temp_SOC_mat=np.zeros((L_op_set[0].shape[0]*S[0].shape[0],L_op_set[0].shape[0]*S[0].shape[0]),dtype=complex)
+		
+		## Generate SOC for one atom
+		for direction in np.arange(3):
+			temp_SOC_mat += np.kron(L_op_set[direction],S[direction])
+
+		## Input SOC of this atom into the full SOC Hamiltonian
+		for i in np.arange(temp_SOC_mat.shape[0]):
+			for j in np.arange(temp_SOC_mat.shape[1]):
+				H_SOC[ref_point+i][ref_point+j] = temp_SOC_mat[i][j]
+		
+		ref_point += temp_SOC_mat.shape[0]
+
+
+
 
 
 

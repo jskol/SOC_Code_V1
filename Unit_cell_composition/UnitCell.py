@@ -18,6 +18,7 @@ class UnitCell:
         self.composition=[] # List allows for duplicates
         for atom in list_of_atoms:
             self.composition.append(atom)
+    
     def add_atom(self, atom:Atom):
         self.composition.append(atom)
 
@@ -50,6 +51,16 @@ class UnitCell:
 
         ax.scatter3D(x_pos,y_pos,z_pos,s=300,c=colors,cmap='Dark2')
         plt.show()
+
+    def get_num_wann(self)->int:
+        '''
+        Returns number of wannier orbitals
+        used in the projection
+        '''
+        num_wann=0
+        for composition_iterator in self.composition:
+            num_wann += len(composition_iterator.orbitals)
+        return num_wann
 
 
 
