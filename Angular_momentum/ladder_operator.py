@@ -4,6 +4,10 @@ import numpy as np
 
 #Function calculating angular momentum matrices for given l value
 def angular_momentum_matrices(l, hbar=1):
+	'''
+	Function calculating L_x, L_y, L_z matrices for a given l.
+	returns: L_x, L_y, L_z
+	'''
 	dim = int(2 * l + 1)
 	m_vals = np.array([l - i for i in range(dim)])
 	# print("m_vals =\n", m_vals) #

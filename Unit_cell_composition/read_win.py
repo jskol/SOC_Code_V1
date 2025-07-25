@@ -56,7 +56,7 @@ def get_projections(file_name="wannier90.win"):
 
 
 #Update compostion by multiplicity of each atom type
-def get_compostion(comp: dict ,file_name="wannier90.win")-> UnitCell:
+def get_composition(comp: dict ,file_name="wannier90.win")-> UnitCell:
     '''
     function extracting the composition of unit cell
     taking into consideration the projections used in the 
@@ -101,5 +101,5 @@ def get_compostion(comp: dict ,file_name="wannier90.win")-> UnitCell:
 
 def composition_wrapper(file_name="wannier90.win")-> UnitCell:
     projetions_dict=get_projections(file_name)
-    res=get_compostion(projetions_dict,file_name)
+    res=get_composition(projetions_dict,file_name)
     return res
