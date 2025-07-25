@@ -19,6 +19,9 @@ class UnitCell:
         for atom in list_of_atoms:
             self.composition.append(atom)
     
+    def __iter__(self):
+        return iter(self.composition)
+
     def add_atom(self, atom:Atom):
         self.composition.append(atom)
 
@@ -74,7 +77,10 @@ if __name__=="__main__":
     Indium4=Atom(name="In",orbitals=['s'],position=[2.1035000,-1.2144563,3.0688580])
 
     uc=UnitCell([Indium1,Indium2,Indium3,Indium4])
-    uc.print_composition()
-    uc.plot_unit_cell()
+    #uc.print_composition()
+    #uc.plot_unit_cell()
 
+
+    for el in uc:
+        el.print_details()
 
