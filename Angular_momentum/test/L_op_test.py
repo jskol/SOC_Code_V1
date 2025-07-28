@@ -3,6 +3,7 @@ import numpy as np
 sys.path.append('..')
 from angular_momentum import AngularMomentum
 
+### TODO: Correct for the new definition of Angular Momentum -its not a dict of dicts
 
 def angular_momentum_operator_test(l: float, angular_momentum: AngularMomentum):
     try:
@@ -44,7 +45,8 @@ def angular_momentum_operator_test(l: float, angular_momentum: AngularMomentum):
 
 if __name__=="__main__":
     l_set=[0.5,1,2]
-    AngMom=AngularMomentum(l_set)
     for l in l_set:
+        AngMom=AngularMomentum(l)
+        
         print("\n ---> Testing for l=%.1f"%l)
         angular_momentum_operator_test(l,AngMom)
