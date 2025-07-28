@@ -34,14 +34,14 @@ class AngularMomentum:
             print("L_%s:\n"%name, mat_temp)
     
 
-    def to_Cartesian(self):
+    def to_Cartesian(self,*projector_set):
         '''
         Transforms all L operator
         initially given in the spherical harmonics basis
         to the Cartesian space
         '''
-        if self.L!=0.5:
-            T_mat=np.matrix(generate_T_mat(self.L))
+        if self.L != 0.5:
+            T_mat=np.matrix(generate_T_mat(self.L,*projector_set))
             for name,mat in self.basis.items():
                 self.basis[name]=T_mat@mat@T_mat.H
 
@@ -55,3 +55,14 @@ if __name__=="__main__":
         AM.print()
         AM.to_Cartesian()
         AM.print()
+
+
+    AM=AngularMomentum(1)
+    AM.print()
+    AM.to_Cartesian(['pz','px','py'])
+    AM.print()
+
+    AM=AngularMomentum(1)
+    AM.print()
+    AM.to_Cartesian(['px','py'])
+    AM.print()
