@@ -9,27 +9,26 @@ class AngularMomentum:
     '''
     AngularMomentum.basis object stores all L operators 
     in a nested dictionary:
-    AngularMomentum.basis[l:float] -dictorary in a given l subspace
-    AngularMomentum.basis[l:float][x] - returns L_x matrix
-    AngularMomentum.basis[l:float][y] - returns L_y matrix
-    AngularMomentum.basis[l:float][z] - returns L_z matrix
+    AngularMomentum.basis -dictorary in a given l subspace
+    AngularMomentum.basis[x] - returns L_x matrix
+    AngularMomentum.basis[y] - returns L_y matrix
+    AngularMomentum.basis[z] - returns L_z matrix
     '''
         
-    def __init__(self,l_values):
+    def __init__(self,l_value):
         '''
-        Constructs set of L operators (L_x,L_y,L_z) for all
-        l-values given in l_values list 
+        Constructs a dict of L operators (L_x,L_y,L_z)
         '''
-        self.basis={}
-        for l in l_values:
-            AngularMomentum.basis[l]=update_angular_momentum(l)
+        self.basis=update_angular_momentum(l_value)
+        self.L=l_value
     
-    def print(self,l:float):
+
+    def print(self):
         '''
         Prints all L matrices for a given l-value
         '''
         print("\nIn the L=%.1f subspace angular momentum operators are given by"%l)
-        for name,mat in AngularMomentum.basis[l].items():
+        for name,mat in self.basis.items():
             mat_temp=mat
             mat_temp[np.absolute(mat_temp)<1e-3]=0
             print("L_%s:\n"%name, mat_temp)
@@ -41,22 +40,18 @@ class AngularMomentum:
         initially given in the spherical harmonics basis
         to the Cartesian space
         '''
-
-        for l,subspace in AngularMomentum.basis.items():
-            if l==0.5:
-                continue
-            T_mat=np.matrix(generate_T_mat(l))
-            for name,mat in subspace.items():
-                subspace[name]=T_mat@mat@T_mat.H
+        if self.L!=0.5:
+            T_mat=np.matrix(generate_T_mat(self.L))
+            for name,mat in self.basis.items():
+                self.basis[name]=T_mat@mat@T_mat.H
 
 
 
 
 if __name__=="__main__":
     l_vals=[0., 0.5,1]
-    AM=AngularMomentum(l_vals)
-    AM.print(l_vals[-1])
-    AM.print(l_vals[0])
-
-    AM.to_Cartesian()
-    AM.print(l_vals[-1])
+    for l in l_vals:
+        AM=AngularMomentum(l)
+        AM.print()
+        AM.to_Cartesian()
+        AM.print()
