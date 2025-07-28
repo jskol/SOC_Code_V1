@@ -2,6 +2,12 @@ import numpy as np
 
 
 class Atom:
+    '''
+    An object that has a 
+    1) name (str)
+    2) position(list)
+    3) orbitals used in the projection step (list)
+    '''
     def __init__(self,name:str ,orbitals: list ,position: list):
         self.name=name
         self.position=position
@@ -14,6 +20,9 @@ class Atom:
 
 
 class UnitCell:
+    '''
+    An object containing set of Atoms
+    '''
     def __init__(self,list_of_atoms=[]):
         self.composition=[] # List allows for duplicates
         for atom in list_of_atoms:
