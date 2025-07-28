@@ -6,6 +6,27 @@ allowed_orbital_names=[
 'px','py','pz','p','l=1',
 'dxy','dyz','dxz','dx2-y2','dz2','d','l=2'
 ]
+def return_orb_set(name :str)->list:
+    '''
+    Check if the projection name is in the list
+    and return either the full set of orbitals for a given 
+    angular momentum or just the name passed 
+    (allowing for using the subset of L-block)
+    '''
+    if name in allowed_orbital_names:
+        if (name =='s') or (name == 'l=0'):
+            return ['s']
+        elif ((name == 'p') or (name == 'l=1')):
+            return ['px','py','pz']
+        elif ((name== 'd') or (name == 'l=2')):
+            return ['dxy','dyz','dxz','dx2-y2','dz2']
+        else:
+            return [name]
+
+    else:
+        exit("Undefined orbital name")    
+
+
 
 def get_projections(file_name="wannier90.win"):
     '''
@@ -28,25 +49,17 @@ def get_projections(file_name="wannier90.win"):
             temp=line.replace(' ','').split(":")
             #temp[0] -name of the element
             #temp[1] - name of the orbital
-            #the rest of the line is irrelevant
+            #the rest of the line is irrelevant (for now in future we need to reslove projections passed using ";" symbol)
             ang_mtm=temp[1].strip() # remove whitespaces
-            if ang_mtm in allowed_orbital_names:
-                element_name=comp.get(temp[0])
-                if element_name == None:
-                    if((ang_mtm == 's') or (ang_mtm == 'l=0')):
-                        comp.update({temp[0]: ['s']})
-                    elif ((ang_mtm == 'p') or (ang_mtm == 'l=1')):
-                        comp.update({temp[0]: ['px','py','pz']})
-                    elif ((ang_mtm == 'd') or (ang_mtm == 'l=2')):
-                        comp.update({temp[0]: ['dxy','dyz','dxz','dx2-y2','dz2']})
-                    else:
-                        comp.update({temp[0] : [ang_mtm]}) # Add new atom
-                else:
-                    new_data = comp.get(temp[0])
-                    new_data.append(ang_mtm)
+            element_name=temp[0].strip()
+            comp.get(temp[0])
+            temp_orb_name_list=return_orb_set(ang_mtm)
+            if comp.get(element_name) == None:
+                comp.update({element_name : temp_orb_name_list})
             else:
-                exit('Unknown orbital name %s'%temp[1])
-        
+                new_data = comp.get(element_name)
+                new_data.extend(temp_orb_name_list)
+
         if(line.rstrip() == "begin projections"):
                     projectors_flag=True
     f.close()
