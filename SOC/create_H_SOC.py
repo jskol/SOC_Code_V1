@@ -55,29 +55,49 @@ def generate_H_SOC(filename):
 	
 	ref_point=0
 
-	for atom in comp.composition(): # iterate over atoms
-		temp_orbitals=atom.orbitals
-		#L_op_set=...
-		temp_SOC_mat=np.zeros((L_op_set[0].shape[0]*S[0].shape[0],L_op_set[0].shape[0]*S[0].shape[0]),dtype=complex)
-		
-		## Generate SOC for one atom
-		for direction in np.arange(3):
-			temp_SOC_mat += np.kron(L_op_set[direction],S[direction])
+	for atom in comp.composition: # iterate over atoms
 
-		## Input SOC of this atom into the full SOC Hamiltonian
-		for i in np.arange(temp_SOC_mat.shape[0]):
-			for j in np.arange(temp_SOC_mat.shape[1]):
-				H_SOC[ref_point+i][ref_point+j] = temp_SOC_mat[i][j]
+		print("atom = \n", atom)
+
+		#temp_orbitals=atom.orbitals
+		for orb in atom.orbitals:
+			print("orb = \n", orb)
+			if (orb == 's'):
+				l = 0
+				print("l == 0")
+			elif (orb[0] == 'p'):
+				l = 1
+				print("l == 1")
+			elif (orb[0] == 'd'):
+				l = 2
+				print("l == 2")
+			else:
+				raise Exception("Orbital unavailable!")
+
+			L_op_set = angular_momentum_matrices(l)
+			print("L_op_set =\n", L_op_set)
+
+			temp_SOC_mat=np.zeros((L_op_set[0].shape[0]*S[0].shape[0],L_op_set[0].shape[0]*S[0].shape[0]),dtype=complex)
+
+			## Generate SOC for one atom
+			for direction in np.arange(3):
+				temp_SOC_mat += np.kron(L_op_set[direction],S[direction])
+			
+			## Input SOC of this atom into the full SOC Hamiltonian
+			for i in np.arange(temp_SOC_mat.shape[0]):
+				for j in np.arange(temp_SOC_mat.shape[1]):
+					H_SOC[ref_point+i][ref_point+j] = temp_SOC_mat[i][j]
 		
 		ref_point += temp_SOC_mat.shape[0]
+			
+			
+		
 
-
-
-
-
-	#return H_SOC
+	return H_SOC
 	
 
 if __name__=="__main__":
 	H_SOC = generate_H_SOC("../Unit_cell_composition/test/mnte.win")
-	#print("H_SOC = \n", H_SOC)
+	print("np.shape(H_SOC) = \n", np.shape(H_SOC))
+	with np.printoptions(threshold=sys.maxsize):
+		print("H_SOC = \n", H_SOC)
