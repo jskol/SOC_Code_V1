@@ -6,6 +6,8 @@ allowed_orbital_names=[
 'px','py','pz','p','l=1',
 'dxy','dyz','dxz','dx2-y2','dz2','d','l=2'
 ]
+
+
 def return_orb_set(name :str)->list:
     '''
     Check if the projection name is in the list

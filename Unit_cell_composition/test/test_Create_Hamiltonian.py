@@ -40,7 +40,7 @@ if __name__=="__main__":
         else:
             exit("Issues with reading from a single file using %s"%func.__name__)
 
-    ## check purposefully borken file 
+    ## check purposefully broken file 
     for func in [timed_create_hamiltonian,timed_CH_JS]:
         try:
             read_class=func(file_name,'wannier90_up_hr_broken.dat')

@@ -32,10 +32,11 @@ def angular_momentum_matrices(l, hbar=1):
 	Ly = -0.5j * (L_plus - L_minus)
 
 	return Lx, Ly, Lz
+
+
+
 def get_L_degeneracy(l: float)-> int:
 	return int(2*l+1)
-
-
 
 def update_angular_momentum(l: float):
 	temp_dictionary = {}
@@ -44,6 +45,7 @@ def update_angular_momentum(l: float):
 	if l == 0.5:
 		temp_dictionary["0"] = np.eye(len(temp_dictionary["z"]))
 	return temp_dictionary
+
 
 if __name__=="__main__":
 	range_of_l = [0.5, 1, 2]
