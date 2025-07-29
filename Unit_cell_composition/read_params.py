@@ -52,17 +52,22 @@ def immerse_params_in_composition(params: list, unitcell : UnitCell):
     '''
     res={}
     for key in params.keys():
-        temp_vec=[]
-        zero=[0. for x in np.arange(len(params[key][4:]))]
-        
-
+        temp_vec=[]        
         for atom in unitcell:
             add_zero=True
+            if key == 'SOC':
+                zero_temp=[0.]
+            else:
+                zero_temp=[0.,0.,0.]
+            num_of_l=len(atom.split_orbitals_by_L()) #number of differnt L-values
+            zero = num_of_l*zero_temp
             for atoms_p in params[key]: # look for the matching atom of the unitcell in the list of atoms with given parameters
-                
                 if atoms_p[0] == atom.name:
                     if atoms_p[1:4] == atom.position:
-                        temp_vec.append(atoms_p)
+                        atom_output=atoms_p
+                        for i in np.arange(np.abs(len(atoms_p[4:])-len(zero))): # append zeros if the number of params does not fit the number orbitals
+                            atom_output.append(0.)
+                        temp_vec.append(atom_output)
                         add_zero=False
                     else:
                         continue
@@ -73,3 +78,5 @@ def immerse_params_in_composition(params: list, unitcell : UnitCell):
                 temp_vec.append([atom.name]+atom.position+ zero)
         res.update({key : temp_vec})
     return res
+
+
