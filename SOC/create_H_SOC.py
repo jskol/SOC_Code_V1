@@ -1,10 +1,11 @@
 import sys
 import re
 import numpy as np
+from termcolor import colored
 
-#sys.path.append('../')
 sys.path.append('../Angular_momentum')
 from ladder_operator import angular_momentum_matrices,get_L_degeneracy, update_angular_momentum
+from angular_momentum import AngularMomentum
 
 sys.path.append('../Unit_cell_composition')
 from create_hamiltonian_time import create_hamiltonian, get_parameters
@@ -32,10 +33,10 @@ def generate_H_SOC(*filenames):
     # num_wann, nrpts = get_parameters(spin_up_file)
     # print("num_wann, nrpts = ", num_wann, ", ", nrpts)	###
 
-    S = angular_momentum_matrices(0.5)
-    spin_degeneracy=S[0].shape[0]
+    S_mat_set = angular_momentum_matrices(0.5)
+    spin_degeneracy=S_mat_set[0].shape[0]
     assert spin_degeneracy == get_L_degeneracy(0.5)
-    print("S = \n", S)
+    print("S = \n", S_mat_set)
 
     comp = {}
     comp = composition_wrapper(spin_up_file)
@@ -53,7 +54,6 @@ def generate_H_SOC(*filenames):
     print("H_SOC = \n", H_SOC)
     print("np.shape(H_SOC) = ", np.shape(H_SOC))
 
-    ref_point=0
 	#list_of_orbitals = []
     ''''
     We are looking for a matrix with a strucutre
@@ -63,72 +63,65 @@ def generate_H_SOC(*filenames):
     another block diagonal matrix
     for each L-subspace
     '''
-
+    ref_p = 0 # ref point for H_SOC matrix
     for atom in comp.composition: # iterate over atoms
         print(atom.print_details())
-        #print("atom = \n", atom)
-
-        #temp_orbitals=atom.orbitals
         
-        temp_list_of_orbitals = []
-        prev_letter=atom.orbitals[0][0]
-        temp_list=[]
-        for orb in atom.orbitals:
-            curr_letter=orb[0]
-            if curr_letter == prev_letter:
-                temp_list.append(orb)
+        temp_list_of_orbitals = atom.split_orbitals_by_L()
+
+        print("divided into subpaces:")
+        #we go through subspaces of ONE atom
+        sub_ref_p = 0 # ref point for matrix of one atom
+        sub_mat_size = 2 * sum(len(sublist) for sublist in temp_list_of_orbitals)
+        sub_matrix = np.zeros((sub_mat_size, sub_mat_size), dtype=complex) 
+        #creating matrix of zeros for one atom
+        print(colored("size(sub_matrix) = ", 'blue'), np.shape(sub_matrix))
+        for it, subspace in enumerate(temp_list_of_orbitals):
+            print("#:",subspace)
+            if (subspace[0] == 's'):
+                l = 0
+                #print("orbital S")
+            elif (subspace[0][0] == 'p'):
+                l = 1
+                #print("orbital P")
+            elif (subspace[0][0] == 'd'):
+                l = 2
+                #print("orbital D")
             else:
-                temp_list_of_orbitals.append(temp_list)
-                temp_list=[]
-            prev_letter=curr_letter 
-        
-        temp_list_of_orbitals.append(temp_list) # Always ends with a non-empty temp_list
+                #print("Orbital unavailable - orb = ", subspace[0])
+                raise Exception("Orbital unavailable!")
 
-        print("divided into subpaces")
-        for it,subspace in enumerate(temp_list_of_orbitals):
-            print("#%i:"%it ,subspace)
+            L_op_set = AngularMomentum(l)
+            L_op_set.to_Cartesian(subspace)
+
+            sub_sub_matrix = np.zeros((2*len(subspace), 2*len(subspace)), dtype=complex)
+            for it, direction in enumerate(['x', 'y', 'z']):
+                sub_sub_matrix += np.kron(L_op_set.basis[direction], S_mat_set[it])
+            ## we've created matrix for a particular orbital
+            print(colored("size(sub_sub_matrix) = ", 'yellow'), np.shape(sub_sub_matrix))
+
+            for i in np.arange(2*len(subspace)):
+                for j in np.arange(2*len(subspace)):
+                    sub_matrix[sub_ref_p + i][sub_ref_p + j] = sub_sub_matrix[i][j]
+            #saving sub_sub_matrix into sub_matrix
+            sub_ref_p += 2*len(subspace) #incrementing reference point of sub_matrix
+
+            print(colored("sub_ref_p = ", 'green'), sub_ref_p)
+
+        for i in np.arange(sub_mat_size):
+            for j in np.arange(sub_mat_size):
+                H_SOC[ref_p + i][ref_p + i] = sub_matrix[i][j]
+        ref_p += sub_mat_size
+            
 
         # for each L-type
         # 1) Generate L operator set (x,y,z)
-        # 2) Transform this oper set to Cartesian (using user defined subset and order of orbitals/projectors)
+        # 2) Transform this oper set to Cartesian (using user defined 
+		# 	 subset and order of orbitals/projectors)
         #    Hint: Use   AngularMomentum.to_Cartesian(subspace)
         # 3) Generate H_SOC 
-        
-        
-        #	temp_list_of_orbitals.append(orb)
-        '''
-            if (orb == 's'):
-                list_of_orbitals.append(orb)
-            elif (orb[0] == 'p'):
-                
-            elif (orb[0] == 'd'):
-                l = 2
-                print("l == 2")
-            else:
-                raise Exception("Orbital unavailable!")
-            
-            
-            #L_op_set = angular_momentum_matrices(l)
-            print("L_op_set =\n", L_op_set)
 
-            temp_SOC_mat=np.zeros((L_op_set[0].shape[0]*S[0].shape[0],L_op_set[0].shape[0]*S[0].shape[0]),dtype=complex)
-
-            ## Generate SOC for one atom
-            for direction in np.arange(3):
-                temp_SOC_mat += np.kron(L_op_set[direction],S[direction])
-            
-            ## Input SOC of this atom into the full SOC Hamiltonian
-            for i in np.arange(temp_SOC_mat.shape[0]):
-                for j in np.arange(temp_SOC_mat.shape[1]):
-                    H_SOC[ref_point+i][ref_point+j] = temp_SOC_mat[i][j]
-            '''
-        #list_of_orbitals.append(temp_list_of_orbitals)
-        #ref_point += temp_SOC_mat.shape[0]
-            
-    #print("temp_list_of_orbitals = \n", list_of_orbitals)
-        
-
-    #return H_SOC
+    return H_SOC
 
 
 if __name__=="__main__":
@@ -137,5 +130,5 @@ if __name__=="__main__":
         #H_SOC = generate_H_SOC("../Unit_cell_composition/test/"+file_name)
         H_SOC = generate_H_SOC("../Unit_cell_composition/test/wannier90_V3.win")
         print("np.shape(H_SOC) = \n", np.shape(H_SOC))
-    # with np.printoptions(threshold=sys.maxsize):
-    # 	print("H_SOC = \n", H_SOC)
+        # with np.printoptions(threshold=sys.maxsize):
+        #     print("H_SOC = \n", H_SOC)
