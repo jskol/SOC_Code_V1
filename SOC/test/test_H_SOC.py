@@ -30,8 +30,8 @@ if __name__=="__main__":
     S=AngularMomentum(0)
     P=AngularMomentum(1)
     D=AngularMomentum(2)
-    P.to_Cartesian(['px','py','pz'])
-    D.to_Cartesian(['dyz','dxz','dx2-y2','dz2'])
+    P.to_Cartesian()#['px','py','pz'])
+    D.to_Cartesian()#['dyz','dxz','dx2-y2','dz2'])
 
     H_SOC = generate_H_SOC("../../Unit_cell_composition/test/wannier90_V3.win")
 

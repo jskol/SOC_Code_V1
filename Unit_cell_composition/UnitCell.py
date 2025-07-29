@@ -33,7 +33,8 @@ class Atom:
                 temp_list.append(orb)
             else:
                 res.append(temp_list)
-                temp_list=[]
+                temp_list=[orb]
+
             prev_letter=curr_letter 
         # Always ends with a non-empty temp_list,
         #  so flush the final list
