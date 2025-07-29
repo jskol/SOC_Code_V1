@@ -21,6 +21,7 @@ if __name__=="__main__":
 
     H_SOC_DS = np.kron(D.x(),S.x()) + np.kron(D.y(),S.y())+ np.kron(D.z(),S.z())
     H_SOC_PS = np.kron(P.x(),S.x()) + np.kron(P.y(),S.y())+ np.kron(P.z(),S.z())     
+    H_SOC_DS[np.absolute(H_SOC_DS)< 1e-3]=0
 
     print("H_SOC (D-subspace):\n",H_SOC_DS)
     print("H_SOC (P-subspace):\n",H_SOC_PS)
