@@ -54,6 +54,8 @@ def immerse_params_in_composition(params: list, unitcell : UnitCell):
     for key in params.keys():
         temp_vec=[]
         zero=[0. for x in np.arange(len(params[key][4:]))]
+        
+
         for atom in unitcell:
             add_zero=True
             for atoms_p in params[key]: # look for the matching atom of the unitcell in the list of atoms with given parameters

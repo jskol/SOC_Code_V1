@@ -103,11 +103,11 @@ def generate_T_mat(l :float,*list_of_orbitals):
 				elif orb=='dxz':
 					res.append(res_temp[1,:])
 				elif orb=='dyz':
-					res.append([res_temp[2,:]])
+					res.append(res_temp[2,:])
 				elif orb=='dx2-y2':
-					res.append([res_temp[3,:]])
+					res.append(res_temp[3,:])
 				elif orb=='dxy':
-					res.append([res_temp[4,:]])
+					res.append(res_temp[4,:])
 				else:
 					exit('wrong orbital type: %s'%orb)
 			res=np.array(res,dtype=np.complex128)

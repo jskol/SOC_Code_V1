@@ -21,7 +21,7 @@ class AngularMomentum:
         '''
         self.basis=update_angular_momentum(l_value)
         self.L=l_value
-    
+
     def __iter__(self):
         return iter(self.basis.items())
 
@@ -29,7 +29,7 @@ class AngularMomentum:
         '''
         Prints all L matrices for a given l-value
         '''
-        print("\nIn the L=%.1f subspace angular momentum operators are given by"%l)
+        print("\nIn the L=%.1f subspace angular momentum operators are given by"%self.L)
         for name,mat in self.basis.items():
             mat_temp=mat
             mat_temp[np.absolute(mat_temp)<1e-3]=0
@@ -47,6 +47,13 @@ class AngularMomentum:
             for name,mat in self.basis.items():
                 self.basis[name]=T_mat@mat@T_mat.H
 
+    def x(self):
+        return self.basis['x']
+    
+    def y(self):
+        return self.basis['y']
+    def z(self):
+        return self.basis['z']
 
 
 
@@ -68,3 +75,5 @@ if __name__=="__main__":
     AM.print()
     AM.to_Cartesian(['px','py'])
     AM.print()
+
+    AM.x()
