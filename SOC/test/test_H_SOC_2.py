@@ -1,3 +1,14 @@
+'''
+Testing The fact that  SOC projected in the
+'dyz','dxz','dxy' subspace is equivalent to 
+-H_SOC in the p-subspace stated in 
+https://arxiv.org/pdf/1507.06323
+
+Yes, order is important:
+[px,py,pz]-> ['dyz','dxz','dxy']
+'''
+
+
 import numpy as np
 import sys
 
