@@ -78,13 +78,14 @@ def generate_H_SOC(*filenames):
         print(colored("size(sub_matrix) = ", 'blue'), np.shape(sub_matrix))
         for it, subspace in enumerate(temp_list_of_orbitals):
             print("#:",subspace)
-            if (subspace[0] == 's'):
+            first_letter=subspace[0][0]
+            if (first_letter == 's'):
                 l = 0
                 #print("orbital S")
-            elif (subspace[0][0] == 'p'):
+            elif (first_letter == 'p'):
                 l = 1
                 #print("orbital P")
-            elif (subspace[0][0] == 'd'):
+            elif (first_letter == 'd'):
                 l = 2
                 #print("orbital D")
             else:

@@ -48,8 +48,7 @@ class AngularMomentum:
                 self.basis[name]=T_mat@mat@T_mat.H
 
     def x(self):
-        return self.basis['x']
-    
+        return self.basis['x'] 
     def y(self):
         return self.basis['y']
     def z(self):
