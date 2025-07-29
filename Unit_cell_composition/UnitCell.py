@@ -15,9 +15,30 @@ class Atom:
 
     def print_details(self):
         print("Atom of %s"%self.name)
+        print("located at ",self.position)
         print("composed of orbitals:" ,self.orbitals)
-        print("is located at ",self.position)
+        print("List of orbitals split by L:\n", self.split_orbitals_by_L())
 
+    def split_orbitals_by_L(self)-> list:
+        '''
+        Splits a list of various orbitals into
+        lists containing different L-value
+        '''
+        res = []
+        prev_letter=self.orbitals[0][0]
+        temp_list=[]
+        for orb in self.orbitals:
+            curr_letter=orb[0]
+            if curr_letter == prev_letter:
+                temp_list.append(orb)
+            else:
+                res.append(temp_list)
+                temp_list=[]
+            prev_letter=curr_letter 
+        # Always ends with a non-empty temp_list,
+        #  so flush the final list
+        res.append(temp_list) 
+        return res
 
 class UnitCell:
     '''
@@ -37,6 +58,7 @@ class UnitCell:
     def print_composition(self):
         for at in self.composition:
             at.print_details()
+            
 
 
     def plot_unit_cell(self):
@@ -93,3 +115,4 @@ if __name__=="__main__":
     for el in uc:
         el.print_details()
 
+    

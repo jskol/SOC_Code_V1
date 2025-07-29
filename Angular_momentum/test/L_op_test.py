@@ -5,10 +5,8 @@ from angular_momentum import AngularMomentum
 
 ### TODO: Correct for the new definition of Angular Momentum -its not a dict of dicts
 
-def angular_momentum_operator_test(l: float, angular_momentum: AngularMomentum):
-    try:
-        angular_momentum.basis[l]
-    except KeyError:
+def angular_momentum_operator_test(l: float, angular_momentum_set: list):
+    assert len(angular_momentum_set) == 3 or
         print('l=%.1f not found'%l)
     mats=[x for x in angular_momentum.basis[l].items()]
     if l == 0.5:
