@@ -16,12 +16,17 @@ if __name__=="__main__":
     P=AngularMomentum(1)
     D=AngularMomentum(2)
     P.to_Cartesian(['px','py','pz'])
-    D.to_Cartesian(['dxy','dyz','dxz'])
+    D.to_Cartesian(['dyz','dxz','dxy'])
 
 
     H_SOC_DS = np.kron(D.x(),S.x()) + np.kron(D.y(),S.y())+ np.kron(D.z(),S.z())
     H_SOC_PS = np.kron(P.x(),S.x()) + np.kron(P.y(),S.y())+ np.kron(P.z(),S.z())     
     H_SOC_DS[np.absolute(H_SOC_DS)< 1e-3]=0
+    H_SOC_PS[np.absolute(H_SOC_PS)< 1e-3]=0
 
     print("H_SOC (D-subspace):\n",H_SOC_DS)
     print("H_SOC (P-subspace):\n",H_SOC_PS)
+    sum_mat=H_SOC_DS+H_SOC_PS
+    sum_mat[np.absolute(sum_mat)<1e-3]=0
+    print("is H_SOC(D) = -H_SOC(P): ", ~np.any(sum_mat))
+    
