@@ -15,6 +15,15 @@ def check_atom_blocks(H_SOC, atoms):
 	print("num_atoms = ", num_atoms)
 	return True
 
+def check_difference(mat, mat2, size, ref):
+    for i in np.arange(size):
+        for j in np.arange(size):
+            if(np.absolute(mat[i][j] - mat2[ref + i][ref + j])) > 1e-6:
+                print("i, j = ", i, ", ",j)
+                print("H_SOC_PS[i][j] = ",H_SOC_PS[i][j])
+                print("H_SOC[ref + i][ref + j] = ",H_SOC[ref + i][ref + j])
+                return False
+    return True
 
 if __name__=="__main__":
     S_pauli=AngularMomentum(0.5)
@@ -36,39 +45,23 @@ if __name__=="__main__":
     H_SOC = np.array(H_SOC)
 
     print(colored("S ORBITALS:", 'red'))
+    ref = 0
     size = 2 # S orbitals
     ### 1st S orbital ###
-    ref = 0
-    submatrix_SS = [row[ref:ref+size] for row in H_SOC_SS[ref:ref+size]]
-    submatrix = [row[ref:ref+size] for row in H_SOC[ref:ref+size]]
-    print(np.array_equal(submatrix_SS, submatrix), " \tref = ", ref)
+    print(check_difference(H_SOC_SS, H_SOC, size, ref))
 
     ### 2nd S orbital ###
-    res = True
     ref += size
-    for i in np.arange(size):
-        for j in np.arange(size):
-            if(H_SOC_SS[i][j] != H_SOC[ref + i][ref + j]):
-                res = False
-    print(res, " \tref = ", ref)
+    print(check_difference(H_SOC_SS, H_SOC, size, ref))
 
     ### 3rd S orbital ###
-    res = True
     ref += size
-    for i in np.arange(size):
-        for j in np.arange(size):
-            if(H_SOC_SS[i][j] != H_SOC[ref + i][ref + j]):
-                res = False
-    print(res, " \tref = ", ref)
+    print(check_difference(H_SOC_SS, H_SOC, size, ref))
 
     ### 4th S orbital ###
-    res = True
     ref += size
-    for i in np.arange(size):
-        for j in np.arange(size):
-            if(H_SOC_SS[i][j] != H_SOC[ref + i][ref + j]):
-                res = False
-    print(res, " \tref = ", ref)
+    print(check_difference(H_SOC_SS, H_SOC, size, ref))
+
     for _ in np.arange(4):
         print(colored("-----", 'cyan'))
         '''
@@ -77,98 +70,37 @@ if __name__=="__main__":
         size = 6
         print(colored("P ORBITALS:", 'red'))
         ### 1st P orbital ###
-        res = True
-        ref += size
-        for i in np.arange(size):
-            for j in np.arange(size):
-                if((np.real(H_SOC_PS[i][j]) - np.real(H_SOC[ref + i][ref + j])) > 1e6
-                or (np.imag(H_SOC_PS[i][j]) - np.imag(H_SOC[ref + i][ref + j])) > 1e6):
-                    print("i, j = ", i, ", ",j)
-                    print("H_SOC_PS[i][j] = ",H_SOC_PS[i][j])
-                    print("H_SOC[ref + i][ref + j] = ",H_SOC[ref + i][ref + j])
-                    res = False
-        print(res, " \tref = ", ref)
+        print(check_difference(H_SOC_PS, H_SOC, size, ref))
+
         ### 2nd P orbital ###
-        res = True
-        #ref += size
-        for i in np.arange(size):
-            for j in np.arange(size):
-                if((np.real(H_SOC_PS[i][j]) - np.real(H_SOC[ref + i][ref + j])) > 1e6
-                or (np.imag(H_SOC_PS[i][j]) - np.imag(H_SOC[ref + i][ref + j])) > 1e6):
-                    res = False
-        print(res, " \tref = ", ref)
+        print(check_difference(H_SOC_PS, H_SOC, size, ref))
+
         ### 3rd P orbital ###
-        res = True
-        #ref += size
-        for i in np.arange(size):
-            for j in np.arange(size):
-                if((np.real(H_SOC_PS[i][j]) - np.real(H_SOC[ref + i][ref + j])) > 1e6
-                or (np.imag(H_SOC_PS[i][j]) - np.imag(H_SOC[ref + i][ref + j])) > 1e6):
-                    res = False
-        print(res, " \tref = ", ref)
+        print(check_difference(H_SOC_PS, H_SOC, size, ref))
+
         '''
         D orbitals
         '''
         size = 8
         print(colored("D ORBITALS:", 'red'))
         ### 1st D orbital ###
-        res = True
         ref += size
-        for i in np.arange(size):
-            for j in np.arange(size):
-                if((np.real(H_SOC_DS[i][j]) - np.real(H_SOC[ref + i][ref + j])) > 1e6
-                or (np.imag(H_SOC_DS[i][j]) - np.imag(H_SOC[ref + i][ref + j])) > 1e6):
-                    print("i, j = ", i, ", ",j)
-                    print("H_SOC_DS[i][j] = ",H_SOC_DS[i][j])
-                    print("H_SOC[ref + i][ref + j] = ",H_SOC[ref + i][ref + j])
-                    res = False
-        print(res, " \tref = ", ref)
+        print(check_difference(H_SOC_DS, H_SOC, size, ref))
+
         ### 2nd D orbital ###
-        res = True
-        #ref += size
-        for i in np.arange(size):
-            for j in np.arange(size):
-                if((np.real(H_SOC_DS[i][j]) - np.real(H_SOC[ref + i][ref + j])) > 1e6
-                or (np.imag(H_SOC_DS[i][j]) - np.imag(H_SOC[ref + i][ref + j])) > 1e6):
-                    print("i, j = ", i, ", ",j)
-                    print("H_SOC_DS[i][j] = ",H_SOC_DS[i][j])
-                    print("H_SOC[ref + i][ref + j] = ",H_SOC[ref + i][ref + j])
-                    res = False
-        print(res, " \tref = ", ref)
+        print(check_difference(H_SOC_DS, H_SOC, size, ref))
+        
         ### 3rd D orbital ###
-        res = True
-        #ref += size
-        for i in np.arange(size):
-            for j in np.arange(size):
-                if((np.real(H_SOC_DS[i][j]) - np.real(H_SOC[ref + i][ref + j])) > 1e6
-                or (np.imag(H_SOC_DS[i][j]) - np.imag(H_SOC[ref + i][ref + j])) > 1e6):
-                    print("i, j = ", i, ", ",j)
-                    print("H_SOC_DS[i][j] = ",H_SOC_DS[i][j])
-                    print("H_SOC[ref + i][ref + j] = ",H_SOC[ref + i][ref + j])
-                    res = False
-        print(res, " \tref = ", ref)
+        print(check_difference(H_SOC_DS, H_SOC, size, ref))
+        
         ### 4th D orbital ###
-        res = True
-        #ref += size
-        for i in np.arange(size):
-            for j in np.arange(size):
-                if((np.real(H_SOC_DS[i][j]) - np.real(H_SOC[ref + i][ref + j])) > 1e6
-                or (np.imag(H_SOC_DS[i][j]) - np.imag(H_SOC[ref + i][ref + j])) > 1e6):
-                    print("i, j = ", i, ", ",j)
-                    print("H_SOC_DS[i][j] = ",H_SOC_DS[i][j])
-                    print("H_SOC[ref + i][ref + j] = ",H_SOC[ref + i][ref + j])
-                    res = False
-        print(res, " \tref = ", ref)
+        print(check_difference(H_SOC_DS, H_SOC, size, ref))
+
     ### one S orbital ###
     print(colored("S ORBITALS:", 'red'))
     size = 2
-    res = True
     ref += size
-    for i in np.arange(size):
-        for j in np.arange(size):
-            if(H_SOC_SS[i][j] != H_SOC[ref + i][ref + j]):
-                res = False
-    print(res, " \tref = ", ref)
+    print(check_difference(H_SOC_PS, H_SOC, size, ref))
 
 '''
 if __name__=="__main__":

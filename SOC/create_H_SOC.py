@@ -29,10 +29,6 @@ def generate_H_SOC(*filenames):
     print("s_up = ", spin_up_file)		###
     print("s_down = ", spin_down_file)	###
 
-    #spin_degeneracy = get_L_degeneracy(0.5)
-    # num_wann, nrpts = get_parameters(spin_up_file)
-    # print("num_wann, nrpts = ", num_wann, ", ", nrpts)	###
-
     S_mat_set = angular_momentum_matrices(0.5)
     spin_degeneracy=S_mat_set[0].shape[0]
     assert spin_degeneracy == get_L_degeneracy(0.5)
@@ -42,19 +38,11 @@ def generate_H_SOC(*filenames):
     comp = composition_wrapper(spin_up_file)
     comp.print_composition()
 
-    #f=open(filename,'r')
-
-    ### Testing calculating number of Wanniers used in the projection
-
     num_wann=comp.get_num_wann()
-    #assert num_wann == 16
     num_spin_wann=spin_degeneracy*num_wann
 
     H_SOC = np.zeros((num_spin_wann,num_spin_wann), dtype=complex)
-    print("H_SOC = \n", H_SOC)
-    print("np.shape(H_SOC) = ", np.shape(H_SOC))
 
-	#list_of_orbitals = []
     ''''
     We are looking for a matrix with a strucutre
     block diagonal
@@ -64,6 +52,7 @@ def generate_H_SOC(*filenames):
     for each L-subspace
     '''
     ref_p = 0 # ref point for H_SOC matrix
+    iter = 0
     for atom in comp.composition: # iterate over atoms
         print(atom.print_details())
         
@@ -113,15 +102,6 @@ def generate_H_SOC(*filenames):
             for j in np.arange(sub_mat_size):
                 H_SOC[ref_p + i][ref_p + i] = sub_matrix[i][j]
         ref_p += sub_mat_size
-            
-
-        # for each L-type
-        # 1) Generate L operator set (x,y,z)
-        # 2) Transform this oper set to Cartesian (using user defined 
-		# 	 subset and order of orbitals/projectors)
-        #    Hint: Use   AngularMomentum.to_Cartesian(subspace)
-        # 3) Generate H_SOC 
-
     return H_SOC
 
 
