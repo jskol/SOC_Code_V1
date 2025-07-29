@@ -22,6 +22,8 @@ class AngularMomentum:
         self.basis=update_angular_momentum(l_value)
         self.L=l_value
     
+    def __iter__(self):
+        return iter(self.basis.items())
 
     def print(self):
         '''
@@ -49,7 +51,7 @@ class AngularMomentum:
 
 
 if __name__=="__main__":
-    l_vals=[0., 0.5,1]
+    l_vals=[0, 0.5, 1]
     for l in l_vals:
         AM=AngularMomentum(l)
         AM.print()
