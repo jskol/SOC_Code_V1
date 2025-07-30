@@ -22,7 +22,9 @@ from read_win import composition_wrapper
 from UnitCell import get_L_from_orbitals_set_name
 
 if __name__=="__main__":
-    l_vals=[0, 0.5, 1]
+   
+
+    ### Carmine test #############
     S=AngularMomentum(0.5)
     P=AngularMomentum(1)
     D=AngularMomentum(2)
@@ -43,31 +45,19 @@ if __name__=="__main__":
         print("is H_SOC(D) = -H_SOC(P): ", ~np.any(sum_mat), "\n\n") # <- Test From Carmine
     else:
         exit("Carmine test has FAILED!")
+    ###################################
 
+    #### Testing the block-diagonal form of the Matrix
+    #### containing H_SOC for all atoms and projectors
 
-    ## Reference matrices
-    S_P=AngularMomentum(0.5)
     
-    S=AngularMomentum(0)
-    S.to_Cartesian() #<- Use default ordering 
-
-    P=AngularMomentum(1)
-    P.to_Cartesian(['px','py','pz']) #<- x,y,z is not the default order
-    
-    D=AngularMomentum(2)
-    D.to_Cartesian() #<- Use default ordering  
-    
-    H_SOC_SS = np.kron(S.x(),S_P.x()) + np.kron(S.y(),S_P.y())+ np.kron(S.z(),S_P.z())
-    H_SOC_DS = np.kron(D.x(),S_P.x()) + np.kron(D.y(),S_P.y())+ np.kron(D.z(),S_P.z())
-    H_SOC_PS = np.kron(P.x(),S_P.x()) + np.kron(P.y(),S_P.y())+ np.kron(P.z(),S_P.z())  
-    H_SOC_PS[np.absolute(H_SOC_PS)<1e-6]=0
-    H_SOC_DS[np.absolute(H_SOC_DS)<1e-6]=0
-    H_SOC_SS[np.absolute(H_SOC_SS)<1e-6]=0
-
+    ## Reference matrices ####
+    S_P=AngularMomentum(0.5) # Generate Pauli matrices
 
     file_name="../../Unit_cell_composition/test/wannier90_V3.win"
     H_SOC = generate_H_SOC_V2(file_name)
-    H_SOC[np.absolute(H_SOC)<1e-6]=0
+    H_SOC[np.absolute(H_SOC)<1e-6]=0 # Remove near zeros
+    
     comp=composition_wrapper(file_name)
     comp.print_composition()
     
@@ -76,14 +66,16 @@ if __name__=="__main__":
         split_orb=atom.split_orbitals_by_L()
         for l_subspace in split_orb:
             print("Subspace of ", l_subspace)
+            ## Extract the block
             H_SOC_block = H_SOC[ref_point:ref_point+2*len(l_subspace),ref_point: ref_point+2*len(l_subspace)]
             
+            ### Create H_SOC in certain basis passed by the user            
             l=get_L_from_orbitals_set_name(l_subspace)
-            
             L=AngularMomentum(l)
             L.to_Cartesian(l_subspace)
             H_SOC_ref=np.kron(L.x(),S_P.x()) + np.kron(L.y(),S_P.y())+ np.kron(L.z(),S_P.z())
             H_SOC_ref[np.absolute(H_SOC_ref)<1e-6]=0
+            
             if ~np.any(H_SOC_ref-H_SOC_block):
                 print("Test : Passed")
             else:
