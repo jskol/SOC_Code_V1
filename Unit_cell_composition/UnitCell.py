@@ -41,6 +41,18 @@ class Atom:
         res.append(temp_list) 
         return res
 
+def get_L_from_orbitals_set_name(orb_list:list)-> int:
+    first_letter=orb_list[0][0]
+    if (first_letter == 's'):
+        l = 0
+    elif (first_letter == 'p'):
+        l = 1
+    elif (first_letter == 'd'):
+        l = 2
+    else:
+        raise Exception("Orbital unavailable!")
+    return l
+
 class UnitCell:
     '''
     An object containing set of Atoms

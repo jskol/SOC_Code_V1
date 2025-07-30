@@ -19,7 +19,7 @@ sys.path.append('..')
 from angular_momentum import AngularMomentum
 from create_H_SOC_V2 import generate_H_SOC_V2
 from read_win import composition_wrapper
-
+from UnitCell import get_L_from_orbitals_set_name
 
 if __name__=="__main__":
     l_vals=[0, 0.5, 1]
@@ -39,19 +39,24 @@ if __name__=="__main__":
     print("H_SOC (P-subspace):\n",H_SOC_PS)
     sum_mat=H_SOC_DS+H_SOC_PS
     sum_mat[np.absolute(sum_mat)<1e-3]=0
-    print("is H_SOC(D) = -H_SOC(P): ", ~np.any(sum_mat), "\n\n")
-    
+    if ~np.any(sum_mat):
+        print("is H_SOC(D) = -H_SOC(P): ", ~np.any(sum_mat), "\n\n") # <- Test From Carmine
+    else:
+        exit("Carmine test has FAILED!")
 
 
     ## Reference matrices
-
     S_P=AngularMomentum(0.5)
+    
     S=AngularMomentum(0)
-    S.to_Cartesian()
+    S.to_Cartesian() #<- Use default ordering 
+
     P=AngularMomentum(1)
-    P.to_Cartesian(['px','py','pz'])
+    P.to_Cartesian(['px','py','pz']) #<- x,y,z is not the default order
+    
     D=AngularMomentum(2)
-    D.to_Cartesian()  
+    D.to_Cartesian() #<- Use default ordering  
+    
     H_SOC_SS = np.kron(S.x(),S_P.x()) + np.kron(S.y(),S_P.y())+ np.kron(S.z(),S_P.z())
     H_SOC_DS = np.kron(D.x(),S_P.x()) + np.kron(D.y(),S_P.y())+ np.kron(D.z(),S_P.z())
     H_SOC_PS = np.kron(P.x(),S_P.x()) + np.kron(P.y(),S_P.y())+ np.kron(P.z(),S_P.z())  
@@ -73,14 +78,8 @@ if __name__=="__main__":
             print("Subspace of ", l_subspace)
             H_SOC_block = H_SOC[ref_point:ref_point+2*len(l_subspace),ref_point: ref_point+2*len(l_subspace)]
             
-            if l_subspace[0][0]=='s':
-                l=0
-            elif l_subspace[0][0]=='p':
-                l=1
-            elif l_subspace[0][0]=='d':
-                l=2
-            else:
-                exit("We have a problem")
+            l=get_L_from_orbitals_set_name(l_subspace)
+            
             L=AngularMomentum(l)
             L.to_Cartesian(l_subspace)
             H_SOC_ref=np.kron(L.x(),S_P.x()) + np.kron(L.y(),S_P.y())+ np.kron(L.z(),S_P.z())

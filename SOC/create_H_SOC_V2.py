@@ -9,7 +9,7 @@ from angular_momentum import AngularMomentum
 
 sys.path.append('../Unit_cell_composition')
 from read_win import composition_wrapper
-
+from UnitCell import get_L_from_orbitals_set_name
 
 def generate_H_SOC_V2(*filenames):
 	
@@ -37,16 +37,8 @@ def generate_H_SOC_V2(*filenames):
         
         split_orb=atom.split_orbitals_by_L()
         for l_subspace in split_orb:
-            first_letter=l_subspace[0][0]
-            if (first_letter == 's'):
-                l = 0
-            elif (first_letter == 'p'):
-                l = 1
-            elif (first_letter == 'd'):
-                l = 2
-            else:
-                raise Exception("Orbital unavailable!")
-
+            
+            l=get_L_from_orbitals_set_name(l_subspace) #Please use this function to get "l"
             L_op_set = AngularMomentum(l)
             L_op_set.to_Cartesian(l_subspace)
 
