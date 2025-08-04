@@ -8,6 +8,7 @@ sys.path.append('..')
 from angular_momentum import AngularMomentum
 from create_H_SOC import generate_H_SOC
 from read_win import get_projections, get_composition, composition_wrapper
+from UnitCell import get_L_from_orbitals_set_name
 
 def check_difference(mat, mat2, size, ref):
     mat[np.absolute(mat)<1e-6]=0
@@ -17,6 +18,23 @@ def check_difference(mat, mat2, size, ref):
     else:
         exit("Test : Failed")
 
+def print_orbital(subspace):
+    first_letter=subspace[0][0]
+    if (first_letter == 's'):
+        print(colored("S orbital", 'red'))
+    elif (first_letter == 'p'):
+        print(colored("P orbital", 'blue'))
+    elif (first_letter == 'd'):
+        print(colored("D orbital", 'yellow'))
+    else:
+        raise Exception("Orbital unavailable!")
+
+def calculate_H_SOC_ref(subspace, S_pauli):
+    L_set = AngularMomentum(get_L_from_orbitals_set_name(subspace))
+    L_set.to_Cartesian(subspace)
+    H_SOC_ref = np.kron(L_set.x(),S_pauli.x()) + np.kron(L_set.y(),S_pauli.y()) + np.kron(L_set.z(),S_pauli.z())
+    return H_SOC_ref
+
 if __name__=="__main__":
     S_pauli=AngularMomentum(0.5)
     S=AngularMomentum(0)
@@ -25,7 +43,10 @@ if __name__=="__main__":
     P.to_Cartesian(['px','py','pz'])
     D.to_Cartesian(['dxy', 'dyz', 'dxz', 'dx2-y2', 'dz2'])
 
-    H_SOC = generate_H_SOC("../../Unit_cell_composition/test/wannier90_V3.win")
+    spin_degeneracy = 2
+
+    filename = "../../Unit_cell_composition/test/wannier90_V3.win"
+    H_SOC = generate_H_SOC(filename)
     ## TODO:
     # 1) Introduce compostion and atomatize testing
     # 2) each type of orbital printed in differentcolor
@@ -40,31 +61,16 @@ if __name__=="__main__":
     H_SOC_DS = np.array(H_SOC_DS)
     H_SOC = np.array(H_SOC)
 
+    comp = composition_wrapper(filename)
 
-    print(colored("S ORBITALS:", 'cyan'))
-    ref = 0
-    size = 2 # S orbitals
-    ### S orbitals ###
-    for _ in np.arange(4):
-        check_difference(H_SOC_SS, H_SOC, size, ref)
-        ref += size
-    for _ in np.arange(4):
-        '''
-        P orbitals
-        '''
-        size = 6
-        print(colored("P ORBITALS:", 'cyan'))
+    ref_p = 0
+    for atom in comp:
+        split_orb = atom.split_orbitals_by_L()
+        for subspace in split_orb:
+            print_orbital(subspace)
+            size = spin_degeneracy*len(subspace)
 
-        ### P orbitals ###
-        check_difference(H_SOC_PS, H_SOC, size, ref)
-        ref += size
-        '''
-        D orbitals
-        '''
-        print(colored("D ORBITALS:", 'cyan'))
-        size = 10
-
-        ### D orbitals ###
-        check_difference(H_SOC_DS, H_SOC, size, ref)
-        ref += size
-
+            #for elem in len(subspace):
+            H_SOC_ref = calculate_H_SOC_ref(subspace, S_pauli)
+            check_difference(H_SOC_ref, H_SOC, size, ref_p)
+        ref_p += size
