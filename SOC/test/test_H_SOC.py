@@ -26,6 +26,10 @@ if __name__=="__main__":
     D.to_Cartesian(['dxy', 'dyz', 'dxz', 'dx2-y2', 'dz2'])
 
     H_SOC = generate_H_SOC("../../Unit_cell_composition/test/wannier90_V3.win")
+    ## TODO:
+    # 1) Introduce compostion and atomatize testing
+    # 2) each type of orbital printed in differentcolor
+    # 3) test on two different *.win files
 
     H_SOC_DS = np.kron(D.x(),S_pauli.x()) + np.kron(D.y(),S_pauli.y())+ np.kron(D.z(),S_pauli.z())
     H_SOC_PS = np.kron(P.x(),S_pauli.x()) + np.kron(P.y(),S_pauli.y())+ np.kron(P.z(),S_pauli.z())
@@ -35,6 +39,7 @@ if __name__=="__main__":
     H_SOC_PS = np.array(H_SOC_PS)
     H_SOC_DS = np.array(H_SOC_DS)
     H_SOC = np.array(H_SOC)
+
 
     print(colored("S ORBITALS:", 'cyan'))
     ref = 0
