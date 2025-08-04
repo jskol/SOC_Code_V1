@@ -7,6 +7,8 @@ from UnitCell import UnitCell
 def read_params(param_file='params'):
     ''' 
     Read parameters like SOC and (local) magnetic fields
+    and return a dictionary of parameters that were in the 
+    param_file
     '''
     params=['SOC','magnetic-field']
     res={}
