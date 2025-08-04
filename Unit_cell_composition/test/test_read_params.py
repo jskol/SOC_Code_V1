@@ -8,10 +8,12 @@ from read_win import composition_wrapper
 if __name__=="__main__":
     res=read_params()
     comp=composition_wrapper("wannier90_V3.win")
-    comp.print_composition()
+    #comp.print_composition()
     print("\nPrint prams\n")
     params_names=['magnetic-field','SOC']
     for prop in params_names:
+        for at in comp:
+            print(at.name, " with ", at.orbitals)
         print("\nInitial read\n")
         for mag in res[prop]:
             print(mag)
