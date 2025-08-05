@@ -2,9 +2,12 @@ import sys
 import numpy as np
 import time
 from termcolor import colored
-sys.path.append('..')
+
+sys.path.append('../../Trash')
 from create_hamiltonian_class_solution import create_hamiltonian as CH_JS
-from create_hamiltonian_time import create_hamiltonian_original,create_hamiltonian, create_hamiltonian_2
+
+sys.path.append('..')
+from create_Hamiltonian import create_hamiltonian_original,create_hamiltonian, create_hamiltonian_2
 
 filename='wannier90_up_hr.dat'
 
@@ -17,8 +20,9 @@ for func_name in func_names[1:]:
     print(colored("%s: "%func_name.__name__, "green"), end - start, "sec")
 
 data_ref=func_names[-2](filename) # create_hamiltonian_2
+exit()
 
-
+print("Runnning comparison ...")
 for line1,line2 in zip(data,data_ref):
     l1=line1.to_Wannier()
     l2=line2.to_Wannier()

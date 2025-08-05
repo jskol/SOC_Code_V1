@@ -12,7 +12,7 @@ from create_hamiltonian_time import create_hamiltonian, get_parameters
 from UnitCell import UnitCell, Atom, get_L_from_orbitals_set_name
 from read_win import get_projections, get_composition, composition_wrapper
 
-def generate_H_SOC(*filenames):
+def generate_H_SOC(*filenames,print_details=False):
     if(len(filenames) ==0):
         win_file='wanner90.win'
     elif (len(filenames) == 1):	#if we pas 1 file, both are the same
@@ -26,7 +26,8 @@ def generate_H_SOC(*filenames):
 
     comp = {}
     comp = composition_wrapper(win_file)
-    comp.print_composition()
+    if print_details:
+        comp.print_composition()
 
     num_wann=comp.get_num_wann()
     num_spin_wann=spin_degeneracy*num_wann
@@ -48,27 +49,9 @@ def generate_H_SOC(*filenames):
                     H_SOC[ref_point+i,ref_point+j]= H_SOC_in_L_subspace[i,j]
             ref_point += spin_degeneracy*len(l_subspace)
 
-            # sub_sub_matrix = np.zeros((2*len(l_subspace), 2*len(l_subspace)), dtype=complex)
-            # for it, direction in enumerate(['x', 'y', 'z']):
-            #     sub_sub_matrix += np.kron(L_op_set.basis[direction], S_mat_set[it])
-            # ## we've created matrix for a particular orbital
-            # print(colored("size(sub_sub_matrix) = ", 'yellow'), np.shape(sub_sub_matrix))
-
-        #     for i in np.arange(2*len(l_subspace)):
-        #         for j in np.arange(2*len(l_subspace)):
-        #             sub_matrix[sub_ref_p + i][sub_ref_p + j] = sub_sub_matrix[i][j]
-        #     #saving sub_sub_matrix into sub_matrix
-        #     sub_ref_p += 2*len(l_subspace) #incrementing reference point of sub_matrix
-
-        #     print(colored("sub_ref_p = ", 'green'), sub_ref_p)
-
-        # for i in np.arange(sub_mat_size):
-        #     for j in np.arange(sub_mat_size):
-        #         H_SOC[ref_p + i][ref_p + i] = sub_matrix[i][j]
-        # ref_p += sub_mat_size
     return H_SOC
 
-def generate_H_SOC_old(*filenames):
+def generate_H_SOC_old(*filenames,print_details=False):
 	
     if(len(filenames) == 0):
         win_file='wanner90.win'
@@ -83,7 +66,8 @@ def generate_H_SOC_old(*filenames):
 
     comp = {}
     comp = composition_wrapper(win_file)
-    comp.print_composition()
+    if print_details:
+        comp.print_composition()
 
     num_wann = comp.get_num_wann()
     num_spin_wann = spin_degeneracy*num_wann

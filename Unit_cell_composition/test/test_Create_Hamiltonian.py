@@ -1,10 +1,13 @@
 import sys
 import numpy as np
-sys.path.append('..')
 sys.path.append('../../Misc')
-from create_hamiltonian_class_solution import create_hamiltonian as CH_JS
-from create_hamiltonian import create_hamiltonian_original,create_hamiltonian,get_parameters
 from timing import timing
+
+sys.path.append('../../Trash')
+from create_hamiltonian_class_solution import create_hamiltonian as CH_JS
+
+sys.path.append('..')
+from create_Hamiltonian import create_hamiltonian_original,create_hamiltonian,get_parameters
 
 @timing
 def timed_create_hamiltonian(*filenames):
