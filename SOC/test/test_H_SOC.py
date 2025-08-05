@@ -37,9 +37,7 @@ def timed_generate_H_SOC_V2(*filenames):
 def check_difference(mat, mat2, size, ref):
     mat[np.absolute(mat)<1e-6] = 0
     mat2[np.absolute(mat2)<1e-6] = 0
-    diff_mat = mat - mat2[ref:ref+size,ref:ref+size]
-    diff_mat[np.absolute(diff_mat)<1e-6] = 0
-    if ~np.any(diff_mat):
+    if ~np.any(mat - mat2):
         print("Test : ", colored("Passed", 'green'))
     else:
         exit("Test : Failed")
