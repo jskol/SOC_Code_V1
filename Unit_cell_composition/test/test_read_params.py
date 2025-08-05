@@ -22,3 +22,9 @@ if __name__=="__main__":
         print("\n%s : After matching .win\n"%prop)
         for mag in res2[prop]:
             print(mag)
+
+
+
+
+    print("\n\n\nExample of read_params usage :\n",res2.keys())
+    print(res2.values())

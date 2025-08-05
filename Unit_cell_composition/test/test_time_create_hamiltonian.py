@@ -20,7 +20,7 @@ for func_name in func_names[1:]:
     print(colored("%s: "%func_name.__name__, "green"), end - start, "sec")
 
 data_ref=func_names[-2](filename) # create_hamiltonian_2
-exit()
+
 
 print("Runnning comparison ...")
 for line1,line2 in zip(data,data_ref):

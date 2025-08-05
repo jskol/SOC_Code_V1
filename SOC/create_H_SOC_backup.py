@@ -12,7 +12,7 @@ from create_hamiltonian_time import create_hamiltonian, get_parameters
 from UnitCell import UnitCell, Atom, get_L_from_orbitals_set_name
 from read_win import get_projections, get_composition, composition_wrapper
 
-def generate_H_SOC(*filenames,params={}, print_details=False):
+def generate_H_SOC(*filenames,print_details=False):
     if(len(filenames) ==0):
         win_file='wanner90.win'
     elif (len(filenames) == 1):	#if we pas 1 file, both are the same
@@ -23,6 +23,7 @@ def generate_H_SOC(*filenames,params={}, print_details=False):
 
     S_Pauli = AngularMomentum(0.5)
     spin_degeneracy = S_Pauli.x().shape[0]
+
     comp = {}
     comp = composition_wrapper(win_file)
     if print_details:
@@ -33,23 +34,16 @@ def generate_H_SOC(*filenames,params={}, print_details=False):
 
     H_SOC = np.zeros((num_spin_wann,num_spin_wann), dtype=complex)
 
-    ## Check if params has key 'SOC', if not return H_SOC
-    ## else do the following
     ref_point = 0 # ref point for H_SOC matrix
-    for atom_comp, atom_param in zip(comp.composition,params['SOC']): # Iterating over each Atom in the Unit cell
-        # TODO:
-        # 1) chceck if names match
-        # 2) check if positions match
-        # 3) check if orbitals match
-        split_orb=atom_comp.split_orbitals_by_L()
-        
-        for iterator ,l_subspace in enumerate(split_orb):
-            H_SOC_strength=atom_param[4+iterator]
+    for atom in comp.composition: # Iterating over each Atom in the Unit cell
+        split_orb=atom.split_orbitals_by_L()
+        for l_subspace in split_orb:
+
             l=get_L_from_orbitals_set_name(l_subspace)
             L_op_set = AngularMomentum(l)
             L_op_set.to_Cartesian(l_subspace)
 
-            H_SOC_in_L_subspace=H_SOC_strength*(np.kron(L_op_set.x(),S_Pauli.x())+np.kron(L_op_set.y(),S_Pauli.y())+np.kron(L_op_set.z(),S_Pauli.z()))
+            H_SOC_in_L_subspace=np.kron(L_op_set.x(),S_Pauli.x())+np.kron(L_op_set.y(),S_Pauli.y())+np.kron(L_op_set.z(),S_Pauli.z())
             for i in np.arange(H_SOC_in_L_subspace.shape[0]):            
                 for j in np.arange(H_SOC_in_L_subspace.shape[1]):
                     H_SOC[ref_point+i,ref_point+j]= H_SOC_in_L_subspace[i,j]
