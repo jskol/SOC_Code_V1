@@ -2,7 +2,7 @@ import sys
 
 sys.path.append('..')
 
-from read_params import read_params,immerse_params_in_composition
+from read_params import read_params, immerse_params_in_composition
 from read_win import composition_wrapper
 
 if __name__=="__main__":

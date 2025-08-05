@@ -4,21 +4,23 @@ import numpy as np
 from termcolor import colored
 
 sys.path.append('../Angular_momentum')
-from ladder_operator import angular_momentum_matrices,get_L_degeneracy, update_angular_momentum
+from ladder_operator import angular_momentum_matrices, get_L_degeneracy, update_angular_momentum
 from angular_momentum import AngularMomentum
 
 sys.path.append('../Unit_cell_composition')
-from create_hamiltonian_time import create_hamiltonian, get_parameters
+from create_Hamiltonian import create_hamiltonian, get_parameters
 from UnitCell import UnitCell, Atom, get_L_from_orbitals_set_name
 from read_win import get_projections, get_composition, composition_wrapper
+from read_params import read_params, immerse_params_in_composition
 
-def generate_H_SOC(*filenames,params={}, print_details=False):
-    if(len(filenames) ==0):
+def generate_H_SOC(*filenames, params={}, print_details=False):
+    print("len(filenames) = ", len(filenames))
+    if(len(filenames) == 0):
         win_file='wanner90.win'
     elif (len(filenames) == 1):	#if we pas 1 file, both are the same
         win_file = filenames[0]
     else:						#in other cases we have error
-        print("error")
+        print("error - file")
         exit(1)
 
     S_Pauli = AngularMomentum(0.5)
@@ -36,25 +38,27 @@ def generate_H_SOC(*filenames,params={}, print_details=False):
     ## Check if params has key 'SOC', if not return H_SOC
     ## else do the following
     ref_point = 0 # ref point for H_SOC matrix
-    for atom_comp, atom_param in zip(comp.composition,params['SOC']): # Iterating over each Atom in the Unit cell
-        # TODO:
-        # 1) chceck if names match
-        # 2) check if positions match
-        # 3) check if orbitals match
-        split_orb=atom_comp.split_orbitals_by_L()
-        
-        for iterator ,l_subspace in enumerate(split_orb):
-            H_SOC_strength=atom_param[4+iterator]
-            l=get_L_from_orbitals_set_name(l_subspace)
-            L_op_set = AngularMomentum(l)
-            L_op_set.to_Cartesian(l_subspace)
+    comp = composition_wrapper(win_file)
+    if ('SOC' in params):
+        print("SOC in params")
+        for atom_comp, atom_param in zip(comp.composition, params['SOC']):
+            if (atom_comp.name == atom_param[0]
+            and atom_comp.position[p] == atom_param[p+1] for p in np.arange(3)):
+                print("all ok")
 
-            H_SOC_in_L_subspace=H_SOC_strength*(np.kron(L_op_set.x(),S_Pauli.x())+np.kron(L_op_set.y(),S_Pauli.y())+np.kron(L_op_set.z(),S_Pauli.z()))
-            for i in np.arange(H_SOC_in_L_subspace.shape[0]):            
-                for j in np.arange(H_SOC_in_L_subspace.shape[1]):
-                    H_SOC[ref_point+i,ref_point+j]= H_SOC_in_L_subspace[i,j]
-            ref_point += spin_degeneracy*len(l_subspace)
+                split_orb=atom_comp.split_orbitals_by_L()
+                
+                for iterator ,l_subspace in enumerate(split_orb):
+                    H_SOC_strength=atom_param[4+iterator]
+                    l=get_L_from_orbitals_set_name(l_subspace)
+                    L_op_set = AngularMomentum(l)
+                    L_op_set.to_Cartesian(l_subspace)
 
+                    H_SOC_in_L_subspace=H_SOC_strength*(np.kron(L_op_set.x(),S_Pauli.x())+np.kron(L_op_set.y(),S_Pauli.y())+np.kron(L_op_set.z(),S_Pauli.z()))
+                    for i in np.arange(H_SOC_in_L_subspace.shape[0]):            
+                        for j in np.arange(H_SOC_in_L_subspace.shape[1]):
+                            H_SOC[ref_point+i,ref_point+j]= H_SOC_in_L_subspace[i,j]
+                    ref_point += spin_degeneracy*len(l_subspace)
     return H_SOC
 
 def generate_H_SOC_old(*filenames,print_details=False):
@@ -123,7 +127,26 @@ if __name__=="__main__":
         
         #files_to_test_on=['mnte.win','wannier90_V2.win','wannier90_V3.win']
         #H_SOC = generate_H_SOC("../Unit_cell_composition/test/"+file_name)
-        H_SOC = generate_H_SOC_old("../Unit_cell_composition/test/wannier90_V3.win")
-        print("np.shape(H_SOC) = \n", np.shape(H_SOC))
+        file = "../Unit_cell_composition/test/wannier90_V3.win"
+        param_file = "../Unit_cell_composition/test/params"
+        res=read_params(param_file)
+        comp=composition_wrapper(file)
+        #comp.print_composition()
+        # print("\nPrint prams\n")
+        params_names=['magnetic-field','SOC']
+        # for prop in params_names:
+        #     for at in comp:
+        #         print(at.name, " with ", at.orbitals)
+            # print("\nInitial read\n")
+            # for mag in res[prop]:
+            #     print(mag)
+
+        res2=immerse_params_in_composition(res,comp)
+            # print("\n%s : After matching .win\n"%prop)
+            # for mag in res2[prop]:
+            #     print(mag)
+
+        H_SOC = generate_H_SOC(file, params=res2)
+        # print("np.shape(H_SOC) = \n", np.shape(H_SOC))
         # with np.printoptions(threshold=sys.maxsize):
         #     print("H_SOC = \n", H_SOC)
