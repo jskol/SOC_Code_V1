@@ -34,17 +34,20 @@ def generate_H_SOC(*filenames, params={}, print_details=False):
     num_spin_wann=spin_degeneracy*num_wann
 
     H_SOC = np.zeros((num_spin_wann,num_spin_wann), dtype=complex)
-
+    ##
+   
     ## Check if params has key 'SOC', if not return H_SOC
     ## else do the following
+    ##if ~('SOC' in params): # SOC is not given ...
+    ##  return H_SOC
     ref_point = 0 # ref point for H_SOC matrix
     comp = composition_wrapper(win_file)
     if ('SOC' in params):
         print("SOC in params")
         for atom_comp, atom_param in zip(comp.composition, params['SOC']):
             if (atom_comp.name == atom_param[0]
-            and atom_comp.position[p] == atom_param[p+1] for p in np.arange(3)):
-                print("all ok")
+            and atom_comp.position[p] == atom_param[p+1] for p in np.arange(3)): # atoms mismatch 
+                exit("Atoms mismatch while constructing H_SOC")
 
                 split_orb=atom_comp.split_orbitals_by_L()
                 
