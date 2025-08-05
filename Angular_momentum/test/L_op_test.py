@@ -3,8 +3,6 @@ import numpy as np
 sys.path.append('..')
 from angular_momentum import AngularMomentum
 
-### TODO: Correct for the new definition of Angular Momentum -its not a dict of dicts
-
 def angular_momentum_operator_test(angular_momentum: AngularMomentum):
     l=angular_momentum.L
     assert len(angular_momentum.basis.items()) == 3 and l != 0.5 or len(angular_momentum.basis.items()) == 4 and l==0.5, "Wrong number of L-matrices"
@@ -54,3 +52,11 @@ if __name__=="__main__":
         
         print("\n ---> Testing for l=%.1f"%l)
         angular_momentum_operator_test(AngMom)
+
+
+    AngMom=AngularMomentum(1.)
+    AngMom.to_Cartesian()
+    for key,value in AngMom:
+        value[np.absolute(value)<1e-6]=0
+        print("L_%s :\n"%key, value)
+        

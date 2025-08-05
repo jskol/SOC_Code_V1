@@ -41,25 +41,27 @@ if __name__=="__main__":
     S_pauli=AngularMomentum(0.5)
     spin_degeneracy = 2
 
-    # filename = "../../Unit_cell_composition/test/wannier90_V2.win"
-    # filename = "../../Unit_cell_composition/test/wannier90_V3.win"
-    filename = "../../Unit_cell_composition/test/wannier90_V4.win"
-    H_SOC = generate_H_SOC(filename)
-    H_SOC = np.array(H_SOC)
+    filenames=["../../Unit_cell_composition/test/wannier90_V4.win"
+              ,"../../Unit_cell_composition/test/wannier90_V3.win",
+                "../../Unit_cell_composition/test/wannier90_V2.win"
+    ]
+    for filename in filenames:
+        H_SOC = generate_H_SOC(filename)
+        H_SOC = np.array(H_SOC)
 
-    ## TODO:
-    # 1) Introduce compostion and atomatize testing
-    # 2) each type of orbital printed in differentcolor
-    # 3) test on two different *.win files
+        ## TODO:
+        # 1) Introduce compostion and atomatize testing
+        # 2) each type of orbital printed in differentcolor
+        # 3) test on two different *.win files
 
-    comp = composition_wrapper(filename)
+        comp = composition_wrapper(filename)
 
-    ref_p = 0
-    for atom in comp:
-        split_orb = atom.split_orbitals_by_L()
-        for subspace in split_orb:
-            print_orbital(subspace)
-            size = spin_degeneracy*len(subspace)
-            H_SOC_ref = calculate_H_SOC_ref(subspace, S_pauli)
-            check_difference(H_SOC_ref, H_SOC, size, ref_p)
-            ref_p += size
+        ref_p = 0
+        for atom in comp:
+            split_orb = atom.split_orbitals_by_L()
+            for subspace in split_orb:
+                print_orbital(subspace)
+                size = spin_degeneracy*len(subspace)
+                H_SOC_ref = calculate_H_SOC_ref(subspace, S_pauli)
+                check_difference(H_SOC_ref, H_SOC, size, ref_p)
+                ref_p += size
