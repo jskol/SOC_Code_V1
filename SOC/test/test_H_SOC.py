@@ -1,12 +1,14 @@
 import numpy as np
 import sys
 from termcolor import colored
+import time
 
 sys.path.append('../../Angular_momentum')
 sys.path.append('../../Unit_cell_composition')
 sys.path.append('..')
 from angular_momentum import AngularMomentum
-from create_H_SOC import generate_H_SOC
+from create_H_SOC import generate_H_SOC_old, generate_H_SOC
+from create_H_SOC_V2 import generate_H_SOC_V2
 from read_win import get_projections, get_composition, composition_wrapper
 from UnitCell import get_L_from_orbitals_set_name
 
@@ -44,16 +46,26 @@ if __name__=="__main__":
     # filename = "../../Unit_cell_composition/test/wannier90_V2.win"
     # filename = "../../Unit_cell_composition/test/wannier90_V3.win"
     filename = "../../Unit_cell_composition/test/wannier90_V4.win"
+    start = time.time()	##
+    H_SOC = generate_H_SOC_old(filename)
+    end = time.time()	##
+    print(colored("time old = ", 'blue'), end - start, " sec")
+    
+    start = time.time()	##
     H_SOC = generate_H_SOC(filename)
+    end = time.time()	##
+    print(colored("time  = ", 'blue'), end - start, " sec")
+
+    start = time.time()	##
+    H_SOC = generate_H_SOC_V2(filename)
+    end = time.time()	##
+    print(colored("time V2 = ", 'blue'), end - start, " sec")
+
+
+    '''
     H_SOC = np.array(H_SOC)
 
-    ## TODO:
-    # 1) Introduce compostion and atomatize testing
-    # 2) each type of orbital printed in differentcolor
-    # 3) test on two different *.win files
-
     comp = composition_wrapper(filename)
-
     ref_p = 0
     for atom in comp:
         split_orb = atom.split_orbitals_by_L()
@@ -63,3 +75,4 @@ if __name__=="__main__":
             H_SOC_ref = calculate_H_SOC_ref(subspace, S_pauli)
             check_difference(H_SOC_ref, H_SOC, size, ref_p)
             ref_p += size
+    '''
