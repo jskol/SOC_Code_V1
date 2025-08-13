@@ -46,25 +46,35 @@ def generate_H_SOC(*filenames, params={}, print_details=False):
     ref_point = 0 # ref point for H_SOC matrix
     #comp = composition_wrapper(win_file)
     if ('SOC' in params):
-        print("SOC in params")
         for atom_comp, atom_param in zip(comp.composition, params['SOC']):
-            if (atom_comp.name == atom_param[0]
-            and atom_comp.position[p] == atom_param[p+1] for p in np.arange(3)): # atoms mismatch 
-                exit("Atoms mismatch while constructing H_SOC")
-
-                split_orb=atom_comp.split_orbitals_by_L()
+            ###
+            print("atom_param = \n", atom_param)
+            print("num_of_orb = ", len(atom_param) - 4) # OK, but write it better
+            print("atom_comp.orbitals = \n", atom_comp.orbitals)
+            set_of_orb = []
+            for orb in atom_comp.orbitals:
+                first_letter = orb[0]
+                if first_letter not in set_of_orb:
+                    set_of_orb.append(first_letter)
+            print("set_of_orb = ", set_of_orb)
                 
-                for iterator ,l_subspace in enumerate(split_orb):
-                    H_SOC_strength=atom_param[4+iterator]
-                    l=get_L_from_orbitals_set_name(l_subspace)
-                    L_op_set = AngularMomentum(l)
-                    L_op_set.to_Cartesian(l_subspace)
+            ###
+            if (atom_comp.name != atom_param[0]
+                or any(atom_comp.position[p] != atom_param[p+1] for p in np.arange(3))): # atoms mismatch 
+                exit("Atoms mismatch while constructing H_SOC")
+            split_orb=atom_comp.split_orbitals_by_L()
+            
+            for iterator ,l_subspace in enumerate(split_orb):
+                H_SOC_strength=atom_param[4+iterator]
+                l=get_L_from_orbitals_set_name(l_subspace)
+                L_op_set = AngularMomentum(l)
+                L_op_set.to_Cartesian(l_subspace)
 
-                    H_SOC_in_L_subspace=H_SOC_strength*(np.kron(L_op_set.x(),S_Pauli.x())+np.kron(L_op_set.y(),S_Pauli.y())+np.kron(L_op_set.z(),S_Pauli.z()))
-                    for i in np.arange(H_SOC_in_L_subspace.shape[0]):            
-                        for j in np.arange(H_SOC_in_L_subspace.shape[1]):
-                            H_SOC[ref_point+i,ref_point+j]= H_SOC_in_L_subspace[i,j]
-                    ref_point += spin_degeneracy*len(l_subspace)
+                H_SOC_in_L_subspace=H_SOC_strength*(np.kron(L_op_set.x(),S_Pauli.x())+np.kron(L_op_set.y(),S_Pauli.y())+np.kron(L_op_set.z(),S_Pauli.z()))
+                for i in np.arange(H_SOC_in_L_subspace.shape[0]):            
+                    for j in np.arange(H_SOC_in_L_subspace.shape[1]):
+                        H_SOC[ref_point+i,ref_point+j]= H_SOC_in_L_subspace[i,j]
+                ref_point += spin_degeneracy*len(l_subspace)
     return H_SOC
 
 def generate_H_SOC_old(*filenames,print_details=False):
