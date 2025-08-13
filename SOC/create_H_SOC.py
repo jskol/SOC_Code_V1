@@ -1,13 +1,16 @@
-import sys
+import sys,os
 import re
 import numpy as np
 from termcolor import colored
 
-sys.path.append('../Angular_momentum')
+#sys.path.append('../Angular_momentum')
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Angular_momentum'))
 from ladder_operator import angular_momentum_matrices, get_L_degeneracy, update_angular_momentum
 from angular_momentum import AngularMomentum
 
-sys.path.append('../Unit_cell_composition')
+
+#sys.path.append('../Unit_cell_composition')
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Unit_cell_composition'))
 from create_Hamiltonian import create_hamiltonian, get_parameters
 from UnitCell import UnitCell, Atom, get_L_from_orbitals_set_name
 from read_win import get_projections, get_composition, composition_wrapper
@@ -41,7 +44,7 @@ def generate_H_SOC(*filenames, params={}, print_details=False):
     ##if ~('SOC' in params): # SOC is not given ...
     ##  return H_SOC
     ref_point = 0 # ref point for H_SOC matrix
-    comp = composition_wrapper(win_file)
+    #comp = composition_wrapper(win_file)
     if ('SOC' in params):
         print("SOC in params")
         for atom_comp, atom_param in zip(comp.composition, params['SOC']):
