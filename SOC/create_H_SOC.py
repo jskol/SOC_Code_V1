@@ -62,6 +62,9 @@ def generate_H_SOC(*filenames, params={}, print_details=False):
                     for j in np.arange(H_SOC_in_L_subspace.shape[1]):
                         H_SOC[ref_point+i,ref_point+j]= H_SOC_in_L_subspace[i,j]
                 ref_point += spin_degeneracy*len(l_subspace)
+    
+    ##Add_magnetic_field(H_SOC,params) -> extend H_SOC with local magnetic fields
+    
     return H_SOC
 
 def generate_H_SOC_old(*filenames, print_details=False):
