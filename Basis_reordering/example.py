@@ -12,8 +12,8 @@ for i in np.arange(Mat1.shape[0]):
 
 print("\nInitial ordering of elements\n",Mat1)
 
-#Exchange 1-3
-x,y=1,2
+#Exchange 2-3
+x,y=2,3
 
 T_mat=np.eye(N,dtype=int)
 T_mat[x-1][x-1]=0

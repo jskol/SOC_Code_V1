@@ -16,6 +16,12 @@ from UnitCell import UnitCell, Atom, get_L_from_orbitals_set_name
 from read_win import get_projections, get_composition, composition_wrapper
 from read_params import read_params, immerse_params_in_composition
 
+def check_input(atom_comp, atom_param):
+    if (atom_comp.name != atom_param[0]
+        or any(atom_comp.position[p] != atom_param[p+1] for p in np.arange(3))
+        or len(atom_comp.split_orbitals_by_L()) != (len(atom_param) - 4)): # atoms mismatch 
+        exit("Atoms mismatch while constructing H_SOC")
+
 def generate_H_SOC(*filenames, params={}, print_details=False):
     print("len(filenames) = ", len(filenames))
     if(len(filenames) == 0):
@@ -37,31 +43,12 @@ def generate_H_SOC(*filenames, params={}, print_details=False):
     num_spin_wann=spin_degeneracy*num_wann
 
     H_SOC = np.zeros((num_spin_wann,num_spin_wann), dtype=complex)
-    ##
-   
-    ## Check if params has key 'SOC', if not return H_SOC
-    ## else do the following
-    ##if ~('SOC' in params): # SOC is not given ...
-    ##  return H_SOC
+
     ref_point = 0 # ref point for H_SOC matrix
-    #comp = composition_wrapper(win_file)
     if ('SOC' in params):
         for atom_comp, atom_param in zip(comp.composition, params['SOC']):
-            ###
-            print("atom_param = \n", atom_param)
-            print("num_of_orb = ", len(atom_param) - 4) # OK, but write it better
-            print("atom_comp.orbitals = \n", atom_comp.orbitals)
-            set_of_orb = []
-            for orb in atom_comp.orbitals:
-                first_letter = orb[0]
-                if first_letter not in set_of_orb:
-                    set_of_orb.append(first_letter)
-            print("set_of_orb = ", set_of_orb)
-                
-            ###
-            if (atom_comp.name != atom_param[0]
-                or any(atom_comp.position[p] != atom_param[p+1] for p in np.arange(3))): # atoms mismatch 
-                exit("Atoms mismatch while constructing H_SOC")
+            check_input(atom_comp, atom_param)
+
             split_orb=atom_comp.split_orbitals_by_L()
             
             for iterator ,l_subspace in enumerate(split_orb):
@@ -77,7 +64,7 @@ def generate_H_SOC(*filenames, params={}, print_details=False):
                 ref_point += spin_degeneracy*len(l_subspace)
     return H_SOC
 
-def generate_H_SOC_old(*filenames,print_details=False):
+def generate_H_SOC_old(*filenames, print_details=False):
 	
     if(len(filenames) == 0):
         win_file='wanner90.win'
