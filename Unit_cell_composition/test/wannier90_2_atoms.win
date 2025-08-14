@@ -10,9 +10,9 @@ exclude_bands= 1-64,135-140
 num_wann =  32
 
 begin projections
-As : px : x=1,0,0,z=0,0,1
-As : py : x=1,0,0,z=0,0,1
-As : pz : x=1,0,0,z=0,0,1
+As : dxy : x=1,0,0,z=0,0,1
+As : dyz : x=1,0,0,z=0,0,1
+As : dxz : x=1,0,0,z=0,0,1
 end projections
 
 spinors = .true.

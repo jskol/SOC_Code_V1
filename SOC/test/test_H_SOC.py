@@ -13,6 +13,7 @@ from angular_momentum import AngularMomentum
 sys.path.append('../../Unit_cell_composition')
 from UnitCell import get_L_from_orbitals_set_name
 from read_win import get_projections, get_composition, composition_wrapper
+from read_params import read_params, immerse_params_in_composition
 
 sys.path.append('..')
 from create_H_SOC import generate_H_SOC_old, generate_H_SOC
@@ -60,6 +61,27 @@ def calculate_H_SOC_ref(subspace, S_pauli):
     return H_SOC_ref
 
 if __name__=="__main__":
+    filename = "../../Unit_cell_composition/test/wannier90_2_atoms.win"
+
+    param_file = "../../Unit_cell_composition/test/params_2_atoms"
+    res=read_params(param_file)
+    comp=composition_wrapper(filename)
+    res2=immerse_params_in_composition(res,comp)
+
+    H_SOC = generate_H_SOC(filename, params=res2)
+    print("shape(H_SOC) = ", np.shape(H_SOC))
+    #H_SOC[H_SOC < 1e-3] = 0
+    np.set_printoptions(suppress=True)
+    print("H_SOC = \n", H_SOC)
+
+    print(colored("spin up", 'red'), "=\n", H_SOC[::2, ::2])
+    print(colored("spin down", 'red'), "=\n", H_SOC[1::2, 1::2])
+
+    print(colored("SOC up/down", 'red'), "=\n", H_SOC[::2, 1::2])
+    print(colored("SOC down/up", 'red'), "=\n", H_SOC[1::2, ::2])
+
+
+    '''
     S_pauli=AngularMomentum(0.5)
     spin_degeneracy = S_pauli.x().shape[0]
 
@@ -86,3 +108,4 @@ if __name__=="__main__":
                 H_SOC_ref = calculate_H_SOC_ref(subspace, S_pauli)
                 check_difference(H_SOC_ref, H_SOC, size, ref_p)
                 ref_p += size
+    '''
