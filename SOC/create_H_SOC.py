@@ -23,7 +23,11 @@ def check_input(atom_comp, atom_param, check_type):
     if (check_type == 'SOC' and (len(atom_comp.split_orbitals_by_L()) != (len(atom_param) - 4))):
         exit("Atoms mismatch while constructing H_SOC")
 
-def add_SOC(H_SOC, params, comp):
+def add_SOC(H_SOC, params, comp)->None:
+    '''
+    Extends H_SOC matrix by local and orbital-selective 
+    spin-orbit Hamiltonian defined in params
+    '''
     ref_point = 0 # ref point for H_SOC matrix
     S_Pauli = AngularMomentum(0.5)
     spin_degeneracy = S_Pauli.x().shape[0]
@@ -42,11 +46,14 @@ def add_SOC(H_SOC, params, comp):
                 H_SOC_in_L_subspace=H_SOC_strength*(np.kron(L_op_set.x(),S_Pauli.x())+np.kron(L_op_set.y(),S_Pauli.y())+np.kron(L_op_set.z(),S_Pauli.z()))
                 for i in np.arange(H_SOC_in_L_subspace.shape[0]):            
                     for j in np.arange(H_SOC_in_L_subspace.shape[1]):
-                        H_SOC[ref_point+i,ref_point+j]= H_SOC_in_L_subspace[i,j]
+                        H_SOC[ref_point+i,ref_point+j] += H_SOC_in_L_subspace[i,j]
                 ref_point += spin_degeneracy*len(l_subspace)
-    return H_SOC
 
-def add_magnetic_field(H_SOC, params, comp):
+def add_magnetic_field(H_SOC, params, comp)-> None:
+    '''
+    Extends H_SOC matrix by local and orbital-selective 
+    magnetic-field defined in params
+    '''
     ref_point = 0 # ref point for H_SOC matrix
     S_Pauli = AngularMomentum(0.5)
     spin_degeneracy = S_Pauli.x().shape[0]
@@ -72,11 +79,14 @@ def add_magnetic_field(H_SOC, params, comp):
                 H_MAG_in_L_subspace=np.kron(id_mat,S_Pauli.x()*mag_field_x)+np.kron(id_mat,S_Pauli.y()*mag_field_y)+np.kron(id_mat,S_Pauli.z()*mag_field_z)
                 for i in np.arange(H_MAG_in_L_subspace.shape[0]):            
                     for j in np.arange(H_MAG_in_L_subspace.shape[1]):
-                        H_SOC[ref_point+i,ref_point+j]= H_MAG_in_L_subspace[i,j]
+                        H_SOC[ref_point+i,ref_point+j] += H_MAG_in_L_subspace[i,j]
                 ref_point += spin_degeneracy*len(l_subspace)
-    return H_SOC
 
-def generate_H_SOC(*filenames, params={}, print_details=False):
+
+def generate_H_SOC(*filenames, params={}, print_details=False)-> np.ndarray:
+    '''
+    
+    '''
     print("len(filenames) = ", len(filenames))
     if(len(filenames) == 0):
         win_file='wanner90.win'
@@ -96,13 +106,11 @@ def generate_H_SOC(*filenames, params={}, print_details=False):
     num_wann=comp.get_num_wann()
     num_spin_wann=spin_degeneracy*num_wann
 
-    H_SOC = np.zeros((num_spin_wann,num_spin_wann), dtype=complex)
+    H_SOC = np.zeros((num_spin_wann,num_spin_wann), dtype=complex) # Inititate proprely sized zero-matrix
 
-    H_SOC += add_SOC(H_SOC, params, comp)
-    H_SOC += add_magnetic_field(H_SOC, params, comp)
-    
-    ##Add_magnetic_field(H_SOC,params) -> extend H_SOC with local magnetic fields
-    
+    add_SOC(H_SOC, params, comp) # add SOC
+    add_magnetic_field(H_SOC, params, comp) # add mag-field
+        
     return H_SOC
 
 def generate_H_SOC_old(*filenames, print_details=False):
