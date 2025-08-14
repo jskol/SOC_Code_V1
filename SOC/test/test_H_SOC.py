@@ -74,6 +74,8 @@ if __name__=="__main__":
     np.set_printoptions(suppress=True)
     print("H_SOC = \n", H_SOC)
 
+
+    exit()
     print(colored("spin up", 'red'), "=\n", H_SOC[::2, ::2])
     print(colored("spin down", 'red'), "=\n", H_SOC[1::2, 1::2])
 
