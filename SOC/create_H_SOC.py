@@ -85,7 +85,7 @@ def add_magnetic_field(H_SOC, params, comp)-> None:
 
 def generate_H_SOC(*filenames, params={}, print_details=False)-> np.ndarray:
     '''
-    
+    TODO
     '''
     print("len(filenames) = ", len(filenames))
     if(len(filenames) == 0):

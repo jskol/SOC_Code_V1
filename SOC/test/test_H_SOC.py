@@ -73,7 +73,10 @@ if __name__=="__main__":
     #H_SOC[H_SOC < 1e-3] = 0
     np.set_printoptions(suppress=True)
     print("H_SOC = \n", H_SOC)
-
+    
+    print("\nH_SOC(Upper-left) = \n", np.diag(H_SOC[:6,:6]))
+    print("\nH_SOC(Lower-right) = \n", np.diag(H_SOC[6:,6:]))
+    
 
     exit()
     print(colored("spin up", 'red'), "=\n", H_SOC[::2, ::2])
