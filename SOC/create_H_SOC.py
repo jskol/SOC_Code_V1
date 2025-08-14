@@ -55,14 +55,15 @@ def add_magnetic_field(H_SOC, params, comp):
             check_input(atom_comp, atom_param, 'magnetic-field')
 
             split_orb=atom_comp.split_orbitals_by_L()
-            r       = atom_param[4]
-            theta   = atom_param[5]
-            phi     = atom_param[6]
-            mag_field_x = r * np.sin(theta) * np.cos(phi)
-            mag_field_y = r * np.sin(theta) * np.sin(phi)
-            mag_field_z = r * np.cos(theta)
+            
             
             for iterator, l_subspace in enumerate(split_orb):
+                r       = atom_param[4+3*iterator] # "3" because each magnetic field is determined by 3 coeff's
+                theta   = atom_param[5+3*iterator]
+                phi     = atom_param[6+3*iterator]
+                mag_field_x = r * np.sin(theta) * np.cos(phi)
+                mag_field_y = r * np.sin(theta) * np.sin(phi)
+                mag_field_z = r * np.cos(theta)
                 l=get_L_from_orbitals_set_name(l_subspace)
                 L_op_set = AngularMomentum(l)
                 L_op_set.to_Cartesian(l_subspace)
