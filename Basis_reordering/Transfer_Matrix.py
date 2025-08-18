@@ -3,9 +3,7 @@ import sys,os
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Unit_cell_composition'))
  
-from create_Hamiltonian import create_hamiltonian, get_parameters
-from UnitCell import UnitCell, Atom, get_L_from_orbitals_set_name
-from read_win import get_projections, get_composition, composition_wrapper
+from read_win import composition_wrapper
 
 def Trasfer_Matrix(*filenames,print_details=False)->np.matrix:
     '''
