@@ -257,10 +257,9 @@ if (__name__=="__main__"):
 
 	file_name='test/wannier90_up_hr.dat'
 	file_name2='test/wannier90_down_hr.dat'
-	merged=create_hamiltonian_2(file_name, file_name2)
-	#merged=create_hamiltonian_original(file_name)
+	merged=create_hamiltonian(file_name, file_name2)
 
 	num_wann, nrpts = get_parameters(file_name)
 	
-	# for sets in merged:
-	# 	print(sets.to_Wannier())
+	for sets in merged:
+		print(sets.to_Wannier())
