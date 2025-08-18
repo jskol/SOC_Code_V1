@@ -48,8 +48,8 @@ def Trasfer_Matrix(*filenames,print_details=False)->np.matrix:
         print("positions after sorting ", list_of_pos)
     
     T_mat=np.zeros((len(orb_list),len(orb_list)))
-    for old,new in enumerate(list_of_pos):
-        T_mat[old,new]=1
+    for new,old in enumerate(list_of_pos):
+        T_mat[new,old]=1
 
     if print_details:
         print(T_mat)
