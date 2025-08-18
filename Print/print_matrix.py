@@ -5,14 +5,10 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Unit_cell_composition'))
 from create_Hamiltonian import create_hamiltonian
 
-filename = '../Unit_cell_composition/test/wannier90_up_hr.dat'
-filename2 = '../Unit_cell_composition/test/wannier90_down_hr.dat'
-merged = create_hamiltonian(filename, filename2)
-
-def save_to_file(input_filename, output_filename="output.dat"):
+def save_to_file(merged_hamiltonian, input_filename, output_filename="output.dat"):
     '''
-    
-    
+    Function saving merged hamiltonian to file and adding parameters 
+    on the beginning of file from input_filename
     '''
     header_lines = []
     now = datetime.now()
@@ -38,6 +34,6 @@ def save_to_file(input_filename, output_filename="output.dat"):
         nrpts_last_line = np.loadtxt(input_filename, skiprows=3+int(np.ceil(nrpts/15))-1, max_rows=1)
         f.write(" ".join(str(int(x)) for x in nrpts_last_line) + "\n")
 
-        for sets in merged:
+        for sets in merged_hamiltonian:
             line = " ".join(map(str, sets.to_Wannier()))
             f.write(line + "\n")
