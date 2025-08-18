@@ -16,6 +16,7 @@ class Wannier_data:
 		else:
 			self.hop=argv[5]+1.j*argv[6]
 
+	
 	def __str__(self):
 		return f"{self.x} {self.y} {self.z} {self.o1} {self.o2} {self.hop}"
 
