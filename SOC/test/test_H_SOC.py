@@ -12,7 +12,7 @@ from angular_momentum import AngularMomentum
 
 sys.path.append('../../Unit_cell_composition')
 from UnitCell import get_L_from_orbitals_set_name
-from read_win import get_projections, get_composition, composition_wrapper
+from read_win import composition_wrapper
 from read_params import read_params, immerse_params_in_composition
 
 sys.path.append('..')

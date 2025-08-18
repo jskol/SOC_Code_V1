@@ -5,15 +5,14 @@ from termcolor import colored
 
 #sys.path.append('../Angular_momentum')
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Angular_momentum'))
-from ladder_operator import angular_momentum_matrices, get_L_degeneracy, update_angular_momentum
+from ladder_operator import angular_momentum_matrices
 from angular_momentum import AngularMomentum
 
 
-#sys.path.append('../Unit_cell_composition')
+
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Unit_cell_composition'))
-from create_Hamiltonian import create_hamiltonian, get_parameters
-from UnitCell import UnitCell, Atom, get_L_from_orbitals_set_name
-from read_win import get_projections, get_composition, composition_wrapper
+from UnitCell import get_L_from_orbitals_set_name
+from read_win import composition_wrapper
 from read_params import read_params, immerse_params_in_composition
 
 def check_input(atom_comp, atom_param, check_type):
@@ -112,6 +111,7 @@ def generate_H_SOC(*filenames, params={}, print_details=False)-> np.ndarray:
     add_magnetic_field(H_SOC, params, comp) # add mag-field
         
     return H_SOC
+
 
 def generate_H_SOC_old(*filenames, print_details=False):
 	

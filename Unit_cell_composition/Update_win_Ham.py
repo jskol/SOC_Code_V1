@@ -1,0 +1,38 @@
+import sys
+import numpy as np
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'SOC'))
+from create_H_SOC import generate_H_SOC
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Basis_reordering'))
+from Transfer_Matrix import Trasfer_Matrix_spinful
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Unit_cell_composition'))
+from create_Hamiltonian import create_hamiltonian
+from read_params import read_params_wrapper
+def update_merged(win_Hamiltonian_params_merged: list, H_SOC)-> None:
+    '''
+    takes win_Hamiltonian_params_merged- List of hamiltonian 
+    parameters from merged win files and updates with H_SOC,
+    REMEMBER TO HAVE THE SAME BASIS OF H_SOC AS WIN HAS !!!
+    '''
+    for sets in win_Hamiltonian_params_merged:
+        if sets[:3] == [0,0,0]:
+            ind_1=sets[3]-1 # to python convention
+            ind_2=sets[4]-1 # to python convension
+            sets[5] += np.real(H_SOC[ind_1][ind_2])
+            sets[6] += np.imag(H_SOC[ind_1][ind_2])
+
+
+
+def merged_with_SOC_wrap(win_files=[], param_file='params',files_to_merge=[])->list:
+    res=create_hamiltonian(files_to_merge) # read hamiltonian elements from wannier90
+    params=read_params_wrapper(param_file,win_files) # get parameters to H_SOC
+    H_SOC= generate_H_SOC(win_files,params) # generate H_SOC (with optional local magnetic field)
+    T_mat=Trasfer_Matrix_spinful(win_files) # generate transfer matrix
+    # transfer H_SOC to proper basis
+    H_SOC_2=T_mat@H_SOC@T_mat.T 
+    update_merged(res,H_SOC_2) # update the r=0,0,0 hamiltonian matrix
+    return res
+
+
