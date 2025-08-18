@@ -2,8 +2,6 @@ import numpy as np
 from datetime import datetime
 import sys, os
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Unit_cell_composition'))
-from create_Hamiltonian import create_hamiltonian
 
 def save_to_file(merged_hamiltonian, input_filename, output_filename="output.dat"):
     '''

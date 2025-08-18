@@ -37,7 +37,12 @@ def get_parameters(filename="wannier90_hr.dat"):
 
 def create_hamiltonian(*filenames):
 	'''
-	Function calculating hamiltonian for given files.
+	Function merging two input hamiltonian parameters into a set 
+	of parameters for one-spinful hamiltonian
+	It accepts:
+	1) No source files-> useses the default name "wannier90_hr.dat"
+	2) one source file-> doubles the parameters of one file
+	3) two source files-> 1st one for spin-up second for spin-down
 	'''
 	if (len(filenames) == 1):
 		spin_up_file = filenames[0]
@@ -70,8 +75,8 @@ def create_hamiltonian(*filenames):
 	col, res = [], []
 	iterator = 0
 	for data_up,data_down in zip(M_up,M_down): #O(nrpts*nw^2)
-		up_ind_1=int(spin_degeneracy*(data_up[3]-1)+1)
-		up_ind_2=int(spin_degeneracy*(data_up[4]-1)+1)
+		up_ind_1=int(spin_degeneracy*(data_up[3]-1)+1) # "-1" to change from Fortran (wannier90) to python, "+1" change from python to Fortran
+		up_ind_2=int(spin_degeneracy*(data_up[4]-1)+1) # "-1" to change from Fortran (wannier90) to python, "+1" change from python to Fortran
 		# down_ind_1 = up_ind_1 + 1 #?
 		# down_ind_2 = up_ind_2 + 1 #?
 		# from 		X = 1, 2, 3, 4, ...
@@ -80,22 +85,24 @@ def create_hamiltonian(*filenames):
 		# we make 	X = 2, 4, 6, 8, ...
 
 		r_vec=[data_up[0],data_up[1],data_up[2]] #store \vec{R} components
-
+		# appending spin_up
 		hop=[data_up[-2],data_up[-1]]
 		inds = [up_ind_1, up_ind_2]
 		col.append(Wannier_data(r_vec + inds + hop))
-		# appending spin_up
+		
+		
 		# Adding zeros:
 		inds = [up_ind_1, up_ind_2 + 1]
 		col.append(Wannier_data(r_vec + inds + [0.,0.]))
 
 		inds = [up_ind_1 + 1, up_ind_2]
 		col.append(Wannier_data(r_vec + inds + [0.,0.]))
-
+		
+		# appending spin_down
 		hop=[data_down[-2],data_down[-1]]
 		inds = [up_ind_1 + 1, up_ind_2 + 1]
 		col.append(Wannier_data(r_vec + inds + hop))
-		# appending spin_down
+		
 
 		iterator += 1
 		if iterator % num_wann==0:
@@ -103,6 +110,8 @@ def create_hamiltonian(*filenames):
 			for elem in col:
 				res.append(elem)
 			col = []
+	
+		
 	return res
 
 if (__name__=="__main__"):
