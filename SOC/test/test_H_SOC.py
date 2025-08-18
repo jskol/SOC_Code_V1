@@ -68,7 +68,7 @@ if __name__=="__main__":
     comp=composition_wrapper(filename)
     res2=immerse_params_in_composition(res,comp)
 
-    H_SOC = generate_H_SOC(filename, params=res2)
+    H_SOC = generate_H_SOC([filename], params=res2)
     print("shape(H_SOC) = ", np.shape(H_SOC))
     #H_SOC[H_SOC < 1e-3] = 0
     np.set_printoptions(suppress=True)

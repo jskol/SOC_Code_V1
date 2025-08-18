@@ -82,7 +82,7 @@ def add_magnetic_field(H_SOC, params, comp)-> None:
                 ref_point += spin_degeneracy*len(l_subspace)
 
 
-def generate_H_SOC(*filenames, params={}, print_details=False)-> np.ndarray:
+def generate_H_SOC(filenames=[], params={}, print_details=False)-> np.ndarray:
     '''
     TODO
     '''
@@ -175,30 +175,3 @@ def generate_H_SOC_old(*filenames, print_details=False):
         ref_p += sub_mat_size
     return H_SOC
 
-if __name__=="__main__":
-        
-        #files_to_test_on=['mnte.win','wannier90_V2.win','wannier90_V3.win']
-        #H_SOC = generate_H_SOC("../Unit_cell_composition/test/"+file_name)
-        file = "../Unit_cell_composition/test/wannier90_2_atomswin"
-        param_file = "../Unit_cell_composition/test/params_2_atoms"
-        res=read_params(param_file)
-        comp=composition_wrapper(file)
-        #comp.print_composition()
-        # print("\nPrint prams\n")
-        params_names=['magnetic-field','SOC']
-        for prop in params_names:
-            for at in comp:
-                print(at.name, " with ", at.orbitals)
-            print("\nInitial read\n")
-            for mag in res[prop]:
-                print(mag)
-
-        res2=immerse_params_in_composition(res,comp)
-            # print("\n%s : After matching .win\n"%prop)
-            # for mag in res2[prop]:
-            #     print(mag)
-
-        #H_SOC = generate_H_SOC(file, params=res2)
-        # print("np.shape(H_SOC) = \n", np.shape(H_SOC))
-        # with np.printoptions(threshold=sys.maxsize):
-        #     print("H_SOC = \n", H_SOC)
