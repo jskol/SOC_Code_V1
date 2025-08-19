@@ -1,9 +1,10 @@
-import sys
+import sys, os
 import numpy as np
-sys.path.append('../../Misc')
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'Misc'))
 from timing import timing
 
-sys.path.append('../../Trash')
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'Trash'))
 from create_hamiltonian_class_solution import create_hamiltonian as CH_JS
 
 sys.path.append('..')

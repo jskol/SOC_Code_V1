@@ -14,7 +14,6 @@ def Trasfer_Matrix(*filenames,print_details=False)->np.matrix:
     thus matrix M that takes atom-wise basis vectors
     becomes matrix H in orbital-wise basis
             H = T@M@T^+
-    
     '''
     
     if(len(filenames) == 0):

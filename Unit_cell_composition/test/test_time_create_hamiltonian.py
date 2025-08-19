@@ -3,7 +3,7 @@ import numpy as np
 import time
 from termcolor import colored
 
-sys.path.append('../../Trash')
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'Trash'))
 from create_hamiltonian_class_solution import create_hamiltonian as CH_JS
 
 sys.path.append('..')
@@ -21,7 +21,6 @@ for func_name in func_names[1:]:
 
 data_ref=func_names[-2](filename) # create_hamiltonian_2
 
-
 print("Runnning comparison ...")
 for line1,line2 in zip(data,data_ref):
     l1=line1.to_Wannier()
@@ -30,5 +29,3 @@ for line1,line2 in zip(data,data_ref):
         if np.abs(l1[i]-l2[i]) > 1e-6:
             print(l1,"\n",l2)
             raise Exception("To approaches generate different results")
-
-

@@ -1,7 +1,6 @@
 import numpy as np
 import sys
 
-
 def generate_T_mat(l :float):
 	'''
 	Function returns a transfer matrix from

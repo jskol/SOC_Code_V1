@@ -1,7 +1,5 @@
 import numpy as np
 from datetime import datetime
-import sys, os
-
 
 def save_to_file(merged_hamiltonian, input_filename, output_filename="output.dat"):
     '''

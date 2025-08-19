@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class Atom:
     '''
     An object that has a 
@@ -61,7 +60,7 @@ class UnitCell:
         self.composition=[] # List allows for duplicates
         for atom in list_of_atoms:
             self.composition.append(atom)
-    
+
     def __iter__(self):
         return iter(self.composition)
 
@@ -71,8 +70,6 @@ class UnitCell:
     def print_composition(self):
         for at in self.composition:
             at.print_details()
-            
-
 
     def plot_unit_cell(self):
         import matplotlib.pyplot as plt
@@ -81,7 +78,7 @@ class UnitCell:
         # find unique names 
         diff_at_num= len(set([x.name for x in self.composition]))
         print("There is %i unique atoms"%diff_at_num)
-        
+
         x_pos,y_pos,z_pos=[],[],[]
         colors=[]
         prev=self.composition[0].name
@@ -109,11 +106,6 @@ class UnitCell:
             num_wann += len(composition_iterator.orbitals)
         return num_wann
 
-
-
-
-
-
 if __name__=="__main__":
     Indium1=Atom(name="In",orbitals=['s'],position=[2.1035000,-1.2144563,5.8756420])
     Indium2=Atom(name="In",orbitals=['s'],position=[2.1035000,1.2144563,14.8201420])
@@ -124,8 +116,5 @@ if __name__=="__main__":
     #uc.print_composition()
     #uc.plot_unit_cell()
 
-
     for el in uc:
         el.print_details()
-
-    

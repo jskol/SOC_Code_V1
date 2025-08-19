@@ -1,13 +1,12 @@
 import sys
 import numpy as np
+
 sys.path.append('..')
 from angular_momentum import AngularMomentum
 
 def angular_momentum_operator_test(angular_momentum: AngularMomentum):
     l=angular_momentum.L
     assert len(angular_momentum.basis.items()) == 3 and l != 0.5 or len(angular_momentum.basis.items()) == 4 and l==0.5, "Wrong number of L-matrices"
-
-    
 
     #Print Matrices
     mats=[]

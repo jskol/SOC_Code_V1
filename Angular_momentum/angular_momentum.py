@@ -1,7 +1,5 @@
 import numpy as np
 
-#helper functions
-
 from generate_T_mat import generate_T_mat
 from ladder_operator import update_angular_momentum
 

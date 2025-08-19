@@ -1,26 +1,21 @@
 import numpy as np
-import sys
+import sys, os
 from termcolor import colored
 import time
 
-
-sys.path.append('../../Misc')
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'Misc'))
 from timing import timing
 
-sys.path.append('../../Angular_momentum')
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'Angular_momentum'))
 from angular_momentum import AngularMomentum
 
-sys.path.append('../../Unit_cell_composition')
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'Unit_cell_composition'))
 from UnitCell import get_L_from_orbitals_set_name
 from read_win import composition_wrapper
 from read_params import read_params, immerse_params_in_composition
 
 sys.path.append('..')
-from create_H_SOC import generate_H_SOC_old, generate_H_SOC
-@timing
-def timed_generate_H_SOC_old(*filenames):
-    res=generate_H_SOC_old(*filenames)
-    return res
+from create_H_SOC import generate_H_SOC
 
 @timing
 def timed_generate_H_SOC(*filenames):
@@ -33,7 +28,6 @@ from create_H_SOC_V2 import generate_H_SOC_V2
 def timed_generate_H_SOC_V2(*filenames):
     res=generate_H_SOC_V2(*filenames)
     return res
-
 
 def check_difference(mat, mat2, size, ref):
     mat[np.absolute(mat)<1e-6] = 0
@@ -77,40 +71,9 @@ if __name__=="__main__":
     print("\nH_SOC(Upper-left) = \n", np.diag(H_SOC[:6,:6]))
     print("\nH_SOC(Lower-right) = \n", np.diag(H_SOC[6:,6:]))
     
-
     exit()
     print(colored("spin up", 'red'), "=\n", H_SOC[::2, ::2])
     print(colored("spin down", 'red'), "=\n", H_SOC[1::2, 1::2])
 
     print(colored("SOC up/down", 'red'), "=\n", H_SOC[::2, 1::2])
     print(colored("SOC down/up", 'red'), "=\n", H_SOC[1::2, ::2])
-
-
-    '''
-    S_pauli=AngularMomentum(0.5)
-    spin_degeneracy = S_pauli.x().shape[0]
-
-    
-    files = ["../../Unit_cell_composition/test/wannier90_V2.win"
-    ,"../../Unit_cell_composition/test/wannier90_V3.win"
-    ,"../../Unit_cell_composition/test/wannier90_V4.win"
-    ]
-    for filename in files:
-        
-        funcs=[timed_generate_H_SOC_V2,timed_generate_H_SOC_old,timed_generate_H_SOC]
-        for fun in funcs:
-            H_SOC = fun(filename)
-        exit()
-        
-        comp = composition_wrapper(filename)
-
-        ref_p = 0
-        for atom in comp:
-            split_orb = atom.split_orbitals_by_L()
-            for subspace in split_orb:
-                print_orbital(subspace)
-                size = spin_degeneracy*len(subspace)
-                H_SOC_ref = calculate_H_SOC_ref(subspace, S_pauli)
-                check_difference(H_SOC_ref, H_SOC, size, ref_p)
-                ref_p += size
-    '''

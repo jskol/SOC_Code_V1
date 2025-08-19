@@ -1,7 +1,6 @@
 import sys
 
 sys.path.append('..')
-
 from read_params import read_params, immerse_params_in_composition
 from read_win import composition_wrapper
 
@@ -22,9 +21,6 @@ if __name__=="__main__":
         print("\n%s : After matching .win\n"%prop)
         for mag in res2[prop]:
             print(mag)
-
-
-
 
     print("\n\n\nExample of read_params usage :\n",res2.keys())
     print(res2.values())

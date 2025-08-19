@@ -11,7 +11,6 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Unit_cell_composi
 from create_Hamiltonian import create_hamiltonian
 from read_params import read_params_wrapper
 
-
 def update_merged(win_Hamiltonian_params_merged: list, H_SOC: np.array)-> None:
     '''
     takes win_Hamiltonian_params_merged- List of hamiltonian 
@@ -23,7 +22,6 @@ def update_merged(win_Hamiltonian_params_merged: list, H_SOC: np.array)-> None:
             ind_1=sets.o1-1 # to python convention
             ind_2=sets.o2-1 # to python convension
             sets.hop += H_SOC[ind_1][ind_2]
-
 
 def merged_with_SOC_wrapper(win_files=[], param_file='params',files_to_merge=[])->list:
     res=create_hamiltonian(files_to_merge) # read hamiltonian elements from wannier90
@@ -37,5 +35,3 @@ def merged_with_SOC_wrapper(win_files=[], param_file='params',files_to_merge=[])
 
     update_merged(res,H_SOC_2) # update the r=0,0,0 hamiltonian matrix
     return res
-
-

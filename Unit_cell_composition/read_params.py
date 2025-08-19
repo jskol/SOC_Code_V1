@@ -1,6 +1,5 @@
 import numpy as np
 
-
 from read_win import composition_wrapper
 from UnitCell import UnitCell
 
@@ -26,7 +25,6 @@ def read_params(param_file='params'):
                 break
         
             if(param_flag):
-                
                 #temp[0] -name of the element
                 #temp[1:4] - location
                 #temp[4:]- parameters
@@ -46,12 +44,10 @@ def read_params(param_file='params'):
         res.update({param : res_temp})
     return res
 
-
 def immerse_params_in_composition(params: dict, unitcell : UnitCell):
     '''
     Function that aligns the atoms in params with atoms in UnitCell
     and adds zeros where the parameters are not given and returns a dictionary
-
     '''
     res={}
     for key in params.keys():
@@ -76,12 +72,10 @@ def immerse_params_in_composition(params: dict, unitcell : UnitCell):
                         continue
                 else:
                     continue     
-            
             if add_zero: # if no parames given for this atom add zero
                 temp_vec.append([atom.name]+atom.position+ zero)
         res.update({key : temp_vec})
     return res
-
 
 def read_params_wrapper(param_file='params', wannier_in_file=None,unit_cell=None):
     res_temp=read_params(param_file)
@@ -93,5 +87,3 @@ def read_params_wrapper(param_file='params', wannier_in_file=None,unit_cell=None
         exit("Pick either .win file or unit_Cell")
     
     return immerse_params_in_composition(res_temp,unit_cell)
-    
-

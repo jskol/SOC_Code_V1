@@ -8,21 +8,18 @@ Yes, order is important:
 [px,py,pz]-> ['dyz','dxz','dxy']
 '''
 
-
 import numpy as np
-import sys
+import sys, os
 
-sys.path.append('../../Angular_momentum')
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'Angular_momentum'))
 from angular_momentum import AngularMomentum
 
-sys.path.append('../../Unit_cell_composition')
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'Unit_cell_composition'))
 from read_win import composition_wrapper
 from UnitCell import get_L_from_orbitals_set_name
 
-
 sys.path.append('..')
 from create_H_SOC import generate_H_SOC
-
 
 if __name__=="__main__":
    

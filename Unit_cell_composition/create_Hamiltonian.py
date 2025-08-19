@@ -15,7 +15,6 @@ class Wannier_data:
 			self.hop=0.0+1.j*0.
 		else:
 			self.hop=argv[5]+1.j*argv[6]
-
 	
 	def __str__(self):
 		return f"{self.x} {self.y} {self.z} {self.o1} {self.o2} {self.hop}"
@@ -34,7 +33,6 @@ def get_parameters(filename="wannier90_hr.dat"):
 		num_wann = int(next(f).strip())
 		nrpts = int(next(f).strip())
 	return num_wann, nrpts
-
 
 def create_hamiltonian(*filenames):
 	'''
@@ -86,24 +84,23 @@ def create_hamiltonian(*filenames):
 		# we make 	X = 2, 4, 6, 8, ...
 
 		r_vec=[data_up[0],data_up[1],data_up[2]] #store \vec{R} components
+
 		# appending spin_up
 		hop=[data_up[-2],data_up[-1]]
 		inds = [up_ind_1, up_ind_2]
 		col.append(Wannier_data(r_vec + inds + hop))
-		
-		
+
 		# Adding zeros:
 		inds = [up_ind_1, up_ind_2 + 1]
 		col.append(Wannier_data(r_vec + inds + [0.,0.]))
 
 		inds = [up_ind_1 + 1, up_ind_2]
 		col.append(Wannier_data(r_vec + inds + [0.,0.]))
-		
+
 		# appending spin_down
 		hop=[data_down[-2],data_down[-1]]
 		inds = [up_ind_1 + 1, up_ind_2 + 1]
 		col.append(Wannier_data(r_vec + inds + hop))
-		
 
 		iterator += 1
 		if iterator % num_wann==0:
@@ -111,8 +108,6 @@ def create_hamiltonian(*filenames):
 			for elem in col:
 				res.append(elem)
 			col = []
-	
-		
 	return res
 
 if (__name__=="__main__"):

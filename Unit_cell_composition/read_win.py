@@ -7,7 +7,6 @@ allowed_orbital_names=[
 'dxy','dyz','dxz','dx2-y2','dz2','d','l=2'
 ]
 
-
 def return_orb_set(name :str)->list:
     '''
     Check if the projection name is in the list
@@ -24,11 +23,8 @@ def return_orb_set(name :str)->list:
             return ['dxy','dyz','dxz','dx2-y2','dz2']
         else:
             return [name]
-
     else:
         exit("Undefined orbital name")    
-
-
 
 def get_projections(file_name="wannier90.win"):
     '''
@@ -66,9 +62,6 @@ def get_projections(file_name="wannier90.win"):
                     projectors_flag=True
     f.close()
     return comp
-
-
-
 
 #Update compostion by multiplicity of each atom type
 def get_composition(comp: dict ,file_name="wannier90.win")-> UnitCell:
@@ -112,7 +105,6 @@ def get_composition(comp: dict ,file_name="wannier90.win")-> UnitCell:
             comp_flag=True
     f.close()
     return res
-
 
 def composition_wrapper(file_name="wannier90.win")-> UnitCell:
     projetions_dict=get_projections(file_name)
