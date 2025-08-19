@@ -18,24 +18,64 @@ from Transfer_Matrix import Trasfer_Matrix_spinful
 sys.path.append(os.path.join(os.path.dirname(__file__), '..','..', 'Unit_cell_composition'))
 from create_Hamiltonian import create_hamiltonian
 from read_params import read_params_wrapper
-from Update_win_Ham import update_merged
+from Update_win_Ham import update_merged,merged_with_SOC_wrapper
+
 
 if __name__=="__main__":
     H_init=create_hamiltonian('wannier90_hr.dat')
-    n_wann=32
-    H=1e6*np.eye(n_wann,dtype=np.complex128)
+    n_wann=32 # by-hand
 
+    ### Simple test with uniform huge Magnetic field ###
+    H=1e6*np.eye(n_wann,dtype=np.complex128)
     H_prev=np.zeros((n_wann,n_wann),dtype=np.complex128)
     H_after=np.zeros((n_wann,n_wann),dtype=np.complex128)
     for sets in H_init:
-        if [sets.x,sets.y,sets.z] == [0,0,0]: # TODO: Test if this condition works
+        if [sets.x,sets.y,sets.z] == [0,0,0]:
             H_prev[sets.o1-1][sets.o2-1] = sets.hop
 
     update_merged(H_init,H)
 
     for sets in H_init:
-        if [sets.x,sets.y,sets.z] == [0,0,0]: # TODO: Test if this condition works
+        if [sets.x,sets.y,sets.z] == [0,0,0]: 
             H_after[sets.o1-1][sets.o2-1]= sets.hop
 
     for diag in np.arange(n_wann):
         print("Before= ", H_prev[diag][diag], " and After= ", H_after[diag][diag])
+
+
+    ### Testing with atom and orbital-selective magnetic field
+    print("\nTesting with orbial and atom -selective magnetic field\n")
+    
+    update_merged(H_init,-H) # undo the magnetic-field H
+    win_file='wannier90.win'
+    params_file='params_merge_test'
+    params= read_params_wrapper(param_file=params_file,wannier_in_file='wannier90.win')
+    print("Parameters read from param file")
+    params_names=['magnetic-field','SOC']
+    for prop in params_names:
+        for mag in params[prop]:
+            print(mag)
+    H_SOC = generate_H_SOC(['wannier90.win'], params=params)
+    print("The diagonal of H_SOC in atom-wise basis: ", H_SOC.diagonal())
+    T_mat=Trasfer_Matrix_spinful(['wannier90.win']) # generate transfer matrix
+    # transfer H_SOC to proper basis
+    H_SOC_2=T_mat@H_SOC@T_mat.T
+    print("The diagonal of H_SOC in orbital-wise basis: ", H_SOC_2.diagonal()) 
+    update_merged(H_init,H_SOC_2)
+    for sets in H_init:
+        if [sets.x,sets.y,sets.z] == [0,0,0]: 
+            H_after[sets.o1-1][sets.o2-1]= sets.hop
+    
+
+    # Testing wrapper 
+    print("\n Testing the wrapper \n")
+    update_merged(H_init,-H_SOC_2) # undo the magnetic-field H
+    H_init_wrap = merged_with_SOC_wrapper(win_file=[win_file],param_file='params_merge_test',files_to_merge=['wannier90_hr.dat'])
+    H_wrap=np.zeros((n_wann,n_wann),dtype=np.complex128)
+    for sets in H_init_wrap:
+        if [sets.x,sets.y,sets.z] == [0,0,0]: 
+            H_wrap[sets.o1-1][sets.o2-1]= sets.hop
+
+    diff=H_after.diagonal()-H_wrap.diagonal()
+    diff[np.absolute(diff)<1e-6] =0
+    print("Wrapper gives the same results as the step-by-step procedure: ", ~np.any(diff))

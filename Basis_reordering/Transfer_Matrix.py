@@ -5,7 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Unit_cell_composi
  
 from read_win import composition_wrapper
 
-def Trasfer_Matrix(*filenames,print_details=False)->np.matrix:
+def Trasfer_Matrix(filenames=[],print_details=False)->np.matrix:
     '''
     Function that takes a file name and returns
     a transfer matrix T from atom-wise basis vector v
@@ -55,9 +55,9 @@ def Trasfer_Matrix(*filenames,print_details=False)->np.matrix:
     
     return T_mat
     
-def Trasfer_Matrix_spinful(*filenames,print_details=False)->np.matrix:
+def Trasfer_Matrix_spinful(filenames=[],print_details=False)->np.matrix:
     '''
-    Function that takes a file name and returns
+    Function that takes a file-name(s) in a list and returns
     a transfer matrix T from atom-wise basis vector v
     to an oribital-wise basis vector w
             T@v = w

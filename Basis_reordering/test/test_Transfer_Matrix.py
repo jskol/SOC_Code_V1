@@ -13,7 +13,7 @@ if __name__=="__main__":
     for win in win_names:
         
         print("\nReading from :", win)
-        l=Trasfer_Matrix(path_to_wins+win,print_details=False)
+        l=Trasfer_Matrix([path_to_wins+win],print_details=False)
         sq= l.T@l
         print("Square is giving unity: ", ~np.any(sq-np.eye(l.shape[0])))
         

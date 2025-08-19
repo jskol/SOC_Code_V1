@@ -23,13 +23,19 @@ def update_merged(win_Hamiltonian_params_merged: list, H_SOC: np.array)-> None:
             ind_2=sets.o2-1 # to python convension
             sets.hop += H_SOC[ind_1][ind_2]
 
-def merged_with_SOC_wrapper(win_files=[], param_file='params',files_to_merge=[])->list:
-    res=create_hamiltonian(files_to_merge) # read hamiltonian elements from wannier90
+
+def merged_with_SOC_wrapper(win_file=[], param_file='params',files_to_merge=[])->list:
+    res=create_hamiltonian(*files_to_merge) # read hamiltonian elements from wannier90
+    if len(win_file)==0:
+        win=None
+    elif len(win_file)==1:
+        win=win_file[0]
+    else:
+        exit('Too many win-files passed')
+    params=read_params_wrapper(param_file=param_file, wannier_in_file=win) # get parameters to H_SOC
+    H_SOC= generate_H_SOC(win_file,params) # generate H_SOC (with optional local magnetic field)
     
-    params=read_params_wrapper(param_file,win_files) # get parameters to H_SOC
-    H_SOC= generate_H_SOC(win_files,params) # generate H_SOC (with optional local magnetic field)
-    
-    T_mat=Trasfer_Matrix_spinful(win_files) # generate transfer matrix
+    T_mat=Trasfer_Matrix_spinful(win_file) # generate transfer matrix
     # transfer H_SOC to proper basis
     H_SOC_2=T_mat@H_SOC@T_mat.T 
 
