@@ -84,6 +84,7 @@ def immerse_params_in_composition(params: dict, unitcell : UnitCell):
 
 
 def read_params_wrapper(param_file='params', wannier_in_file=None,unit_cell=None):
+    print(wannier_in_file)
     res_temp=read_params(param_file)
     if ((wannier_in_file==None) and (unit_cell==None)):   
         exit("One has to pass either .win file or the unit-cell composition")
