@@ -20,7 +20,10 @@ if __name__ == "__main__":
     win_file = args.win
     param_file = args.param
     files_to_merge = args.hr   # put hr file(s) in a list
-    out_file = args.out
+    out_file= args.out
+    if out_file == None:
+        out_file="out.dat"
+        
 
     result = merged_with_SOC_wrapper([win_file], param_file, files_to_merge)
 

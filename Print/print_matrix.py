@@ -3,10 +3,12 @@ from datetime import datetime
 import csv
 
 def input_file_preamble_check(n: int, m: int, input_filename=[])->bool:
+    print(" len of input: ", len(input_filename))
+    print(input_filename)
     if len(input_filename)==1:
         return True
     elif len(input_filename)==2:
-        file1, file2 = input_filenames
+        file1, file2 = input_filename
         all_match = True
 
         with open(file1) as f1, open(file2) as f2:
@@ -21,16 +23,18 @@ def input_file_preamble_check(n: int, m: int, input_filename=[])->bool:
         print("return = ", all_match)
         return all_match
     else:
+        
         return False
 
-def save_to_file(merged_hamiltonian, input_filename=[], output_filename="output.dat"):
+def save_to_file(merged_hamiltonian, input_filename=[], output_filename: str ="output.dat"):
     '''
     Function saving merged hamiltonian to file and adding parameters 
     on the beginning of file from input_filename
     '''
     nrpts = np.loadtxt(input_filename, skiprows=2, max_rows=1)
-    input_file_preamble_check(3-1, 3+int(np.ceil(nrpts/15))-1, input_filename)
-        # raise Exception("Two hr files mismatch")
+    print( "Preabule check: " ,input_file_preamble_check(3-1, 3+int(np.ceil(nrpts/15))-1, input_filename))
+ 
+    #     raise Exception("Two hr files mismatch")
     # exit(0)
 
     header_lines = []

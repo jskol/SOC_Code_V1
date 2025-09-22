@@ -26,7 +26,10 @@ if __name__=="__main__":
     n_wann=32 # by-hand
 
     ### Simple test with uniform huge Magnetic field ###
-    H=1e6*np.eye(n_wann,dtype=np.complex128)
+    
+    M_f=1e6
+    print("\n Testing spin H_loc update with large (%f) chemical potnetial "%M_f)
+    H=M_f*np.eye(n_wann,dtype=np.complex128)
     H_prev=np.zeros((n_wann,n_wann),dtype=np.complex128)
     H_after=np.zeros((n_wann,n_wann),dtype=np.complex128)
     for sets in H_init:
@@ -38,9 +41,11 @@ if __name__=="__main__":
     for sets in H_init:
         if [sets.x,sets.y,sets.z] == [0,0,0]: 
             H_after[sets.o1-1][sets.o2-1]= sets.hop
+    M_f_diff= H_prev.diagonal()-H_after.diagonal() + M_f
+    M_f_diff[np.absolute(M_f_diff)<1e-6]=0
+    print("Testing local potential (chemical potential ): ", 'Passed' if ~np.any(M_f_diff) else 'Failed ')
 
-    for diag in np.arange(n_wann):
-        print("Before= ", H_prev[diag][diag], " and After= ", H_after[diag][diag])
+    
 
 
     ### Testing with atom and orbital-selective magnetic field
