@@ -1,11 +1,38 @@
 import numpy as np
 from datetime import datetime
+import csv
 
-def save_to_file(merged_hamiltonian, input_filename, output_filename="output.dat"):
+def input_file_preamble_check(n: int, m: int, input_filename=[])->bool:
+    if len(input_filename)==1:
+        return True
+    elif len(input_filename)==2:
+        file1, file2 = input_filenames
+        all_match = True
+
+        with open(file1) as f1, open(file2) as f2:
+            for row_num, (line1, line2) in enumerate(zip(f1, f2), start=1):
+                row1 = line1.split()
+                row2 = line2.split()
+                if row1[n:m+1] != row2[n:m+1]:
+                    print(f"Row {row_num} mismatch:")
+                    print(f"  {file1}: {row1[n:m+1]}")
+                    print(f"  {file2}: {row2[n:m+1]}")
+                    all_match = False
+        print("return = ", all_match)
+        return all_match
+    else:
+        return False
+
+def save_to_file(merged_hamiltonian, input_filename=[], output_filename="output.dat"):
     '''
     Function saving merged hamiltonian to file and adding parameters 
     on the beginning of file from input_filename
     '''
+    nrpts = np.loadtxt(input_filename, skiprows=2, max_rows=1)
+    input_file_preamble_check(3-1, 3+int(np.ceil(nrpts/15))-1, input_filename)
+        # raise Exception("Two hr files mismatch")
+    # exit(0)
+
     header_lines = []
     now = datetime.now()
     header_lines.append(f"Created on {now.strftime('%d%b%Y')} at {now.strftime('%H:%M:%S')}")
@@ -15,7 +42,6 @@ def save_to_file(merged_hamiltonian, input_filename, output_filename="output.dat
     num_wann_new = num_wann_og * spin_degeneracy
     header_lines.append(int(num_wann_new))
 
-    nrpts = np.loadtxt(input_filename, skiprows=2, max_rows=1)
     header_lines.append(int(nrpts))
 
     with open(output_filename, "w") as f:
