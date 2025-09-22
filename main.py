@@ -26,8 +26,7 @@ if __name__ == "__main__":
         
 
     result = merged_with_SOC_wrapper([win_file], param_file, files_to_merge)
-
-    save_to_file(result, files_to_merge[0], out_file)
+    save_to_file(result, files_to_merge, out_file)
 
     # print(files_to_merge)
     # print(win_file)
