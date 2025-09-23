@@ -63,13 +63,13 @@ def create_hamiltonian(*filenames):
 	M_up = np.loadtxt(spin_up_file, skiprows=skiplines)
 	M_down = np.loadtxt(spin_down_file, skiprows=skiplines)
 
-	for data_up,data_down in zip(M_up,M_down):
+	for line, (data_up,data_down) in enumerate(zip(M_up,M_down)):
 
 		# Check spin-up and spin-down data complince
 		start = time.time()	##
 		for ind in np.arange(5):
 			if data_up[ind] != data_down[ind]:
-				raise Exception("The two data files do not align\n Error occured for:\n", data_up, "\n", data_down)
+				exit("The two data files do not align at line %i position %i\n Error occured for:\n%s\n%s\n"%(line, ind,data_up, data_down))
 
 	col, res = [], []
 	iterator = 0
