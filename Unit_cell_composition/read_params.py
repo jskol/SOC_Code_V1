@@ -78,6 +78,11 @@ def immerse_params_in_composition(params: dict, unitcell : UnitCell):
     return res
 
 def read_params_wrapper(param_file='params', wannier_in_file=None,unit_cell=None):
+    '''
+    function wrapper that depending on the supplied compostion
+    either from wannier file or by unit cell obejects
+    prepares the parameters dictionary for further calculations
+    '''
     print(wannier_in_file)
     res_temp=read_params(param_file)
     if ((wannier_in_file==None) and (unit_cell==None)):   
@@ -88,3 +93,36 @@ def read_params_wrapper(param_file='params', wannier_in_file=None,unit_cell=None
         exit("Pick either .win file or unit_Cell")
     
     return immerse_params_in_composition(res_temp,unit_cell)
+
+
+def gen_template(wannier_in_file=None):
+    '''
+    function generating an empty or filled with zeros
+    properly defined params file
+    '''
+
+    unit_cell=composition_wrapper(wannier_in_file)
+    with open('params','w') as f:
+        f.write('#Name #x #y #z #m_r # m_theta #m_phi\n')
+        f.write('begin magnetic-field\n')
+        if wannier_in_file != None:
+            for atom in unit_cell:
+                out_str='%s'%atom.name
+                for coord in atom.position:
+                    out_str += ' %s'%coord
+                out_str += ' 0 0 0\n'
+                f.write(out_str)
+        f.write('end magnetic-field\n')
+
+        f.write('#Name #x #y #z #lambda_SOC\n')
+        f.write('begin SOC\n')
+        if wannier_in_file != None:
+            for atom in unit_cell:
+                out_str='%s'%atom.name
+                for coord in atom.position:
+                    out_str += ' %s'%coord
+                out_str += ' 0\n'
+                f.write(out_str)
+        f.write('end SOC')
+
+
