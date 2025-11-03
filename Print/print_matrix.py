@@ -3,6 +3,10 @@ from datetime import datetime
 import csv
 
 def input_file_preamble_check(input_filename=[])->bool:
+    '''
+    Routnie to check if in case of two HR files
+    the preambules match
+    '''
     print(" len of input: ", len(input_filename))
     print(input_filename)
     if len(input_filename)==0:
@@ -35,7 +39,7 @@ def save_to_file(merged_hamiltonian, input_filename=[], output_filename: str ="o
     '''
         
     if input_file_preamble_check(input_filename):
-        print( "Preabule check PASSED")
+        print( "Preabule check : PASSED")
     else:
         exit("Problem with the preabules of the two files")
     
