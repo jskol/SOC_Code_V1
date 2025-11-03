@@ -19,9 +19,8 @@ class TestCases(unittest.TestCase):
     def test_compare_sets(self):
         E1,D1=read_DOS("dos.dat", 1)
         E2,D2=read_DOS("dos.dat", 2)
-        self.assertEqual(E1.any(),E2.any()) # Check if energies are the same
+        self.assertTrue((E1==E2).all()) # Check if energies are the same
+        self.assertFalse((D1 == D2).all()) # Check if some DOS's are different
         
-
-
 if __name__=="__main__":
     unittest.main()

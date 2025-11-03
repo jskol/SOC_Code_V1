@@ -34,12 +34,3 @@ def read_params()-> tuple[str,int,float]:
     args = parser.parse_args()
 
     return args.dosfile, args.col, args.frac
-
-
-
-#print("I'm using read_params")
-
-if __name__=="__main__":
-    #Here you do the testing 
-    fname, col, frac =read_params()
-    print ( fname, col, frac)
