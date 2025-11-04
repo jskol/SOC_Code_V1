@@ -55,9 +55,11 @@ def calculate_H_SOC_ref(subspace, S_pauli):
     return H_SOC_ref
 
 if __name__=="__main__":
-    filename = "../../Unit_cell_composition/test/wannier90_2_atoms.win"
 
-    param_file = "../../Unit_cell_composition/test/params_2_atoms"
+    test_case_loc='../../test_cases/'
+    filename = test_case_loc+"wannier90_2_atoms.win"
+
+    param_file = test_case_loc+"params_2_atoms"
     res=read_params(param_file)
     comp=composition_wrapper(filename)
     res2=immerse_params_in_composition(res,comp)

@@ -8,17 +8,17 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..','..', 'Unit_cell_co
 from read_win import composition_wrapper
 
 if __name__=="__main__":
-    path_to_wins='../../Unit_cell_composition/test/'
+    test_case_loc='../../test_cases/'
     win_names=['mnte.win','wannier90.win', 'wannier90_V3.win']
     for win in win_names:
         
         print("\nReading from :", win)
-        l=Trasfer_Matrix_spinful(path_to_wins+win,print_details=False)
+        l=Trasfer_Matrix_spinful([test_case_loc+win],print_details=False)
         sq= l.T@l
         print("Square is giving unity: ", ~np.any(sq-np.eye(l.shape[0])))
         
         # Read the order from win
-        comp = composition_wrapper(path_to_wins+win)
+        comp = composition_wrapper(test_case_loc+win)
         orb_list_print=[]
         orb_list=[]    
         for atom in comp:

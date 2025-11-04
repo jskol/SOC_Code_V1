@@ -6,9 +6,10 @@ from timing import timing
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'Trash'))
 from create_hamiltonian_class_solution import create_hamiltonian as CH_JS
+from create_hamiltonian import create_hamiltonian_original
 
 sys.path.append('..')
-from create_Hamiltonian import create_hamiltonian_original,create_hamiltonian,get_parameters
+from create_Hamiltonian import create_hamiltonian,get_parameters
 
 @timing
 def timed_create_hamiltonian(*filenames):
@@ -25,17 +26,19 @@ def timed_CH_JS(*filenames):
     return res
 
 if __name__=="__main__":
-    file_name='wannier90_up_hr.dat'
+    test_case_loc='../../test_cases/'
+    file_name=test_case_loc+'wannier90_up_hr.dat'
     num_wann, nrpts = get_parameters(file_name)
     ## basic check of reading one file
     
+    ''' All test cases moved to test_cases dir so this test is skipped
     for func in [timed_create_hamiltonian,timed_CH_JS]:
         read_class_no_name=func()
         if(len(read_class_no_name) == nrpts*(2*num_wann)**2):
             print("Reading Hamiltonian from the default name  using %s :Worked !"%func.__name__)
         else:
             exit("Issues with reading the default file using %s"%str(func))
-
+    '''
     for func in [timed_create_hamiltonian,timed_CH_JS]:
 
         read_class=func(file_name)
@@ -47,7 +50,7 @@ if __name__=="__main__":
     ## check purposefully broken file 
     for func in [timed_create_hamiltonian,timed_CH_JS]:
         try:
-            read_class=func(file_name,'wannier90_up_hr_broken.dat')
+            read_class=func(file_name,test_case_loc+'wannier90_up_hr_broken.dat')
         except:
             print("Test Passed for %s-> Execption about the data missalignment thrown"%func.__name__)   
         else:

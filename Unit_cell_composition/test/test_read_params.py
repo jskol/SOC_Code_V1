@@ -5,8 +5,9 @@ from read_params import read_params, immerse_params_in_composition
 from read_win import composition_wrapper
 
 if __name__=="__main__":
-    res=read_params("params_2_atoms")
-    comp=composition_wrapper("wannier90_2_atoms.win")
+    test_case_loc='../../test_cases/'
+    res=read_params(test_case_loc+"params_2_atoms")
+    comp=composition_wrapper(test_case_loc+"wannier90_2_atoms.win")
     #comp.print_composition()
     print("\nPrint prams\n")
     params_names=['magnetic-field','SOC']

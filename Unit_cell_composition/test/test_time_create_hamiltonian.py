@@ -9,7 +9,8 @@ from create_hamiltonian_class_solution import create_hamiltonian as CH_JS
 sys.path.append('..')
 from create_Hamiltonian import create_hamiltonian_original,create_hamiltonian, create_hamiltonian_2
 
-filename='wannier90_up_hr.dat'
+test_case_loc='../../test_cases/'
+filename=test_case_loc+'wannier90_up_hr.dat'
 
 func_names=[create_hamiltonian_original,create_hamiltonian, create_hamiltonian_2, CH_JS]
 

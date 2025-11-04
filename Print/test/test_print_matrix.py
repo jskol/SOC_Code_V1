@@ -35,8 +35,9 @@ def compare_files(filename, output_file):
     print("data in both files match")
 
 if __name__=="__main__":
-    filename = '../../Unit_cell_composition/test/wannier90_up_hr.dat'
-    filename2 = '../../Unit_cell_composition/test/wannier90_down_hr.dat'
+    test_case_loc='../../test_cases/'
+    filename = test_case_loc+'wannier90_up_hr.dat'
+    filename2 = test_case_loc+'wannier90_down_hr.dat'
     output_file = "output.dat"
 
     merged = create_hamiltonian(filename, filename2)

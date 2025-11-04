@@ -22,7 +22,8 @@ from Update_win_Ham import update_merged,merged_with_SOC_wrapper
 
 
 if __name__=="__main__":
-    H_init=create_hamiltonian('wannier90_hr.dat')
+    test_case_loc='../../test_cases/'
+    H_init=create_hamiltonian(test_case_loc+'wannier90_hr.dat')
     n_wann=32 # by-hand
 
     ### Simple test with uniform huge Magnetic field ###
@@ -52,17 +53,17 @@ if __name__=="__main__":
     print("\nTesting with orbial and atom -selective magnetic field\n")
     
     update_merged(H_init,-H) # undo the magnetic-field H
-    win_file='wannier90.win'
-    params_file='params_merge_test'
-    params= read_params_wrapper(param_file=params_file,wannier_in_file='wannier90.win')
+    win_file= test_case_loc+'wannier90.win'
+    params_file= test_case_loc+'params_merge_test'
+    params= read_params_wrapper(param_file=params_file,wannier_in_file= test_case_loc+'wannier90.win')
     print("Parameters read from param file")
     params_names=['magnetic-field','SOC']
     for prop in params_names:
         for mag in params[prop]:
             print(mag)
-    H_SOC = generate_H_SOC(['wannier90.win'], params=params)
+    H_SOC = generate_H_SOC([ test_case_loc+'wannier90.win'], params=params)
     print("The diagonal of H_SOC in atom-wise basis: ", H_SOC.diagonal())
-    T_mat=Trasfer_Matrix_spinful(['wannier90.win']) # generate transfer matrix
+    T_mat=Trasfer_Matrix_spinful([ test_case_loc+'wannier90.win']) # generate transfer matrix
     # transfer H_SOC to proper basis
     H_SOC_2=T_mat@H_SOC@T_mat.T
     print("The diagonal of H_SOC in orbital-wise basis: ", H_SOC_2.diagonal()) 
@@ -75,7 +76,7 @@ if __name__=="__main__":
     # Testing wrapper 
     print("\n Testing the wrapper \n")
     update_merged(H_init,-H_SOC_2) # undo the magnetic-field H
-    H_init_wrap = merged_with_SOC_wrapper(win_file=[win_file],param_file='params_merge_test',files_to_merge=['wannier90_hr.dat'])
+    H_init_wrap = merged_with_SOC_wrapper(win_file=[win_file],param_file= test_case_loc+'params_merge_test',files_to_merge=[ test_case_loc+'wannier90_hr.dat'])
     H_wrap=np.zeros((n_wann,n_wann),dtype=np.complex128)
     for sets in H_init_wrap:
         if [sets.x,sets.y,sets.z] == [0,0,0]: 
