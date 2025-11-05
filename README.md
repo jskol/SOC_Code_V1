@@ -15,6 +15,6 @@ To run the code, one needs just Python (3.+) with NumPy.
 
 
 ## Contributors
-This project was developed by MagTop members: Jan Skolimowski, Kamil Jamroszczyk and Mathews Benny
+This project was developed by MagTop members: Jan Skolimowski, Carmine Autieri, Kamil Jamroszczyk and Mathews Benny
 
 
