@@ -1,9 +1,0 @@
-1) Using get get_composition create H_SOC matrix
-    create H_SOC- [2*num_wann x 2*num_wann] using Unit cell composition obtained from the get_composition function ( in Unit_cell_composition/read_win.py)
-    write test for:
-    -) size check
-        compare size of your H_SOC with: 1) create Hamilotnian submatrix for r=[0,0,0]; 2) get_parameters [2*num_wann x  2*num_wann]
-    -) run it for all test files (compositions in Unit_cell_composition/test/*.win) 
-
-
-2) transfer this matrix to Wannier90 orbital ordering
