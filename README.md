@@ -8,7 +8,7 @@ quantities from the TBH.
 
 ## Usage
 To run the code, just execute main.py with flags. For more information, run 
-`python3 main.py -h`
+`python3 app/main.py -h`
 
 ## Requirements
 To run the code, one needs just Python (3.+) with NumPy.
