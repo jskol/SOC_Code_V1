@@ -1,5 +1,5 @@
 import numpy as np
-
+import os
 from read_win import composition_wrapper
 from UnitCell import UnitCell
 
@@ -102,7 +102,10 @@ def gen_template(wannier_in_file=None):
     '''
 
     unit_cell=composition_wrapper(wannier_in_file)
-    with open('params','w') as f:
+    out_dir=''
+    if os.path.isdir('out'):
+        out_dir='out/'
+    with open(out_dir+'params','w') as f:
         f.write('#Name #x #y #z #m_r # m_theta #m_phi\n')
         f.write('begin magnetic-field\n')
         if wannier_in_file != None:
