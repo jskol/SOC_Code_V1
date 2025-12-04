@@ -4,11 +4,12 @@ from termcolor import colored
 from datetime import datetime
 import sys, os
 
-sys.path.append('../app/Unit_cell_composition')
-from create_Hamiltonian import create_hamiltonian
+curr_dir=os.path.dirname(os.path.abspath(__file__)) #
+parent_dir = os.path.dirname(curr_dir)
+sys.path.append(parent_dir)
 
-sys.path.append('../app/Print')
-from print_matrix import save_to_file
+from app.Unit_cell_composition.create_Hamiltonian import create_hamiltonian
+from app.Print.print_matrix import save_to_file
 
 def compare_files(filename, output_file):
     '''
@@ -26,21 +27,33 @@ def compare_files(filename, output_file):
         # Normalize whitespace and split into tokens
         tokens1 = lines1[line_num - 1].split()
         tokens2 = lines2[line_num - 1].split()
-
-        if tokens1 != tokens2:
-            print(f"Line {line_num} differs:")
-            print("filename:", tokens1)
-            print("output_file:", tokens2)
-            exit()
+        assert tokens1 == tokens2
+        #if tokens1 != tokens2:
+        #    print(f"Line {line_num} differs:")
+        #    print("filename:", tokens1)
+        #    print("output_file:", tokens2)
+        #    exit()
     print("data in both files match")
 
-if __name__=="__main__":
-    test_case_loc='test_cases/'
-    filename = test_case_loc+'wannier90_up_hr.dat'
-    filename2 = test_case_loc+'wannier90_down_hr.dat'
-    output_file = "output.dat"
+#if __name__=="__main__":
+test_case_loc='test_cases/'
+filename = test_case_loc+'wannier90_up_hr.dat'
+filename2 = test_case_loc+'wannier90_down_hr.dat'
+filename3 = test_case_loc+'wannier90_down_hr_broken_preambule.dat'
+output_file = "output.dat"
 
-    merged = create_hamiltonian(filename, filename2)
-    save_to_file(merged, filename, output_file)
+import pytest
 
-    compare_files(filename, output_file)
+
+@pytest.mark.parametrize("f1,f2",[
+    pytest.param(filename, filename,id="merging the same two files"),
+    pytest.param(filename, filename2,id="marging the opposite spins"),
+    pytest.param(filename, filename3,id="broken preambule",marks=pytest.mark.xfail)
+    ])
+def test_marge(f1,f2):
+    merged = create_hamiltonian(f1,f2)
+    save_to_file(merged, [f1,f2], output_file)
+    compare_files(f1, output_file)
+    assert True
+    os.remove(output_file)
+

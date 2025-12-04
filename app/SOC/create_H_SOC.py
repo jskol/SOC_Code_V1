@@ -3,14 +3,16 @@ import re
 import numpy as np
 from termcolor import colored
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Angular_momentum'))
-from ladder_operator import angular_momentum_matrices
-from angular_momentum import AngularMomentum
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Unit_cell_composition'))
-from UnitCell import get_L_from_orbitals_set_name
-from read_win import composition_wrapper
-from read_params import read_params, immerse_params_in_composition
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+#sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Angular_momentum'))
+from Angular_momentum.ladder_operator import angular_momentum_matrices
+from Angular_momentum.angular_momentum import AngularMomentum
+
+#sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Unit_cell_composition'))
+from Unit_cell_composition.UnitCell import get_L_from_orbitals_set_name
+from Unit_cell_composition.read_win import composition_wrapper
+from Unit_cell_composition.read_params import read_params, immerse_params_in_composition
 
 def check_input(atom_comp, atom_param, check_type):
     if (atom_comp.name != atom_param[0]

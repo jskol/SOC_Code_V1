@@ -1,4 +1,7 @@
 import numpy as np
+import os,sys
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from UnitCell import UnitCell,Atom
 
 allowed_orbital_names=[

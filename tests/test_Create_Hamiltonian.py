@@ -2,15 +2,14 @@ import sys, os
 import numpy as np
 import pytest
 
-sys.path.append('../app/Misc')
-from timing import timing
+curr_dir=os.path.dirname(os.path.abspath(__file__)) #
+parent_dir = os.path.dirname(curr_dir) #get parent
+sys.path.append(parent_dir)
 
-sys.path.append( '../app/Trash')
-from create_hamiltonian_class_solution import create_hamiltonian as CH_JS
-from create_hamiltonian import create_hamiltonian_original
-
-sys.path.append('../app/Unit_cell_composition')
-from create_Hamiltonian import create_hamiltonian,get_parameters
+from app.Misc.timing import timing
+from app.Trash.create_hamiltonian_class_solution import create_hamiltonian as CH_JS
+from app.Trash.create_hamiltonian import create_hamiltonian_original
+from app.Unit_cell_composition.create_Hamiltonian import create_hamiltonian,get_parameters
 
 @timing
 def timed_create_hamiltonian(*filenames):
@@ -27,9 +26,7 @@ def timed_CH_JS(*filenames):
     return res
 
 test_case_loc='test_cases/'
-#file_name=test_case_loc+'wannier90_up_hr.dat'
-## basic check of reading one file
-#target_num_lines=nrpts*(2*num_wann)**2
+
 @pytest.mark.parametrize("func, file_name", [
     (timed_create_hamiltonian,'wannier90_up_hr.dat'),
         (timed_CH_JS,'wannier90_up_hr.dat'),

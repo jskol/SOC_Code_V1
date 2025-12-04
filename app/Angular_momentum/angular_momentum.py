@@ -1,5 +1,6 @@
 import numpy as np
-
+import sys,os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from generate_T_mat import generate_T_mat
 from ladder_operator import update_angular_momentum
 

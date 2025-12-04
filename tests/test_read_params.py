@@ -1,8 +1,10 @@
-import sys
+import sys,os
 
-sys.path.append('../app/Unit_cell_composition')
-from read_params import read_params, immerse_params_in_composition
-from read_win import composition_wrapper
+curr_dir=os.path.dirname(os.path.abspath(__file__)) #
+parent_dir = os.path.dirname(curr_dir)
+sys.path.append(parent_dir)
+from app.Unit_cell_composition.read_params import read_params, immerse_params_in_composition
+from app.Unit_cell_composition.read_win import composition_wrapper
 
 if __name__=="__main__":
     test_case_loc='test_cases/'

@@ -10,16 +10,14 @@ Yes, order is important:
 
 import numpy as np
 import sys, os
+curr_dir=os.path.dirname(os.path.abspath(__file__)) #
+parent_dir = os.path.dirname(curr_dir) #get parent
+sys.path.append(parent_dir)
 
-sys.path.append('../app/Angular_momentum')
-from angular_momentum import AngularMomentum
-
-sys.path.append('../app/Unit_cell_composition')
-from read_win import composition_wrapper
-from UnitCell import get_L_from_orbitals_set_name
-
-sys.path.append('../app/SOC')
-from create_H_SOC import generate_H_SOC
+from app.Angular_momentum.angular_momentum import AngularMomentum
+from app.Unit_cell_composition.read_win import composition_wrapper
+from app.Unit_cell_composition.UnitCell import get_L_from_orbitals_set_name
+from app.SOC.create_H_SOC import generate_H_SOC
 
 ### Carmine test #############
 S=AngularMomentum(0.5)

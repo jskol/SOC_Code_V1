@@ -9,16 +9,16 @@
 import sys,os
 import numpy as np
 from termcolor import colored
-sys.path.append('../app/SOC')
-from create_H_SOC import generate_H_SOC
 
-sys.path.append('../app/Basis_reordering')
-from Transfer_Matrix import Trasfer_Matrix_spinful
+curr_dir=os.path.dirname(os.path.abspath(__file__)) #
+parent_dir = os.path.dirname(curr_dir)
+sys.path.append(curr_dir)
 
-sys.path.append('../app/Unit_cell_composition')
-from create_Hamiltonian import create_hamiltonian
-from read_params import read_params_wrapper
-from Update_win_Ham import update_merged,merged_with_SOC_wrapper
+from app.SOC.create_H_SOC import generate_H_SOC
+from app.Basis_reordering.Transfer_Matrix import Trasfer_Matrix_spinful
+from app.Unit_cell_composition.create_Hamiltonian import create_hamiltonian
+from app.Unit_cell_composition.read_params import read_params_wrapper
+from app.Unit_cell_composition.Update_win_Ham import update_merged,merged_with_SOC_wrapper
 
 
 if __name__=="__main__":

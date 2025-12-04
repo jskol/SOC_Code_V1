@@ -1,11 +1,14 @@
 import sys,os
 import numpy as np
 
-sys.path.append('../app/Basis_reordering')
-from Transfer_Matrix import Trasfer_Matrix_spinful
 
-sys.path.append('../app/Unit_cell_composition')
-from read_win import composition_wrapper
+
+curr_dir=os.path.dirname(os.path.abspath(__file__)) #
+parent_dir = os.path.dirname(curr_dir)
+sys.path.append(curr_dir)
+
+from app.Basis_reordering.Transfer_Matrix import Trasfer_Matrix_spinful
+from app.Unit_cell_composition.read_win import composition_wrapper
 
 if __name__=="__main__":
     test_case_loc='test_cases/'

@@ -2,13 +2,10 @@ import argparse
 import sys
 import os
 
-sys.path.append('app/Unit_cell_composition')
-from Update_win_Ham import merged_with_SOC_wrapper
-from read_params import gen_template
-
-
-sys.path.append('app/Print')
-from print_matrix import save_to_file
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from app.Unit_cell_composition.Update_win_Ham import merged_with_SOC_wrapper
+from app.Unit_cell_composition.read_params import gen_template
+from app.Print.print_matrix import save_to_file
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

@@ -1,9 +1,11 @@
-import sys
+import sys,os
 import numpy as np
 import pytest
 
-sys.path.append('../app/Unit_cell_composition')
-from read_win import composition_wrapper
+curr_dir=os.path.dirname(os.path.abspath(__file__)) #
+parent_dir = os.path.dirname(curr_dir) #get parent
+sys.path.append(parent_dir)
+from app.Unit_cell_composition.read_win import composition_wrapper
 
 files=['wannier90.win','wannier90_V2.win','mnte.win','mnte_V2.win','wannier90_V3.win','wannier90_V4.win']
 test_case_dir='test_cases/'

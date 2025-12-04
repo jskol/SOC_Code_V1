@@ -1,5 +1,6 @@
 import numpy as np
-import os
+import os,sys
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from read_win import composition_wrapper
 from UnitCell import UnitCell
 

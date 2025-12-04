@@ -1,15 +1,15 @@
 import sys,os
 import numpy as np
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'SOC'))
-from create_H_SOC import generate_H_SOC
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Basis_reordering'))
-from Transfer_Matrix import Trasfer_Matrix_spinful
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Unit_cell_composition'))
-from create_Hamiltonian import create_hamiltonian
-from read_params import read_params_wrapper
+from SOC.create_H_SOC import generate_H_SOC
+
+from Basis_reordering.Transfer_Matrix import Trasfer_Matrix_spinful
+
+from Unit_cell_composition.create_Hamiltonian import create_hamiltonian
+from Unit_cell_composition.read_params import read_params_wrapper
 
 def update_merged(win_Hamiltonian_params_merged: list, H_SOC: np.array)-> None:
     '''

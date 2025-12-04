@@ -1,15 +1,15 @@
-import sys
+import sys,os
 import numpy as np
 import time
 from termcolor import colored
 
-sys.path.append( '../app/Trash')
-from create_hamiltonian_class_solution import create_hamiltonian as CH_JS
-from create_hamiltonian import create_hamiltonian_original
 
-
-sys.path.append('../app/Unit_cell_composition')
-from create_Hamiltonian import create_hamiltonian
+curr_dir=os.path.dirname(os.path.abspath(__file__)) #
+parent_dir = os.path.dirname(curr_dir)
+sys.path.append(curr_dir)
+from app.Trash.create_hamiltonian_class_solution import create_hamiltonian as CH_JS
+from app.Trash.create_hamiltonian import create_hamiltonian_original
+from app.Unit_cell_composition.create_Hamiltonian import create_hamiltonian
 
 test_case_loc='test_cases/'
 filename=test_case_loc+'wannier90_up_hr.dat'

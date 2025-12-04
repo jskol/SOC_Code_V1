@@ -1,8 +1,14 @@
-import sys
+import sys,os
 import numpy as np
 
-sys.path.append('../app/Angular_momentum')
-from angular_momentum import AngularMomentum
+
+curr_dir=os.path.dirname(os.path.abspath(__file__)) #
+parent_dir = os.path.dirname(curr_dir)
+sys.path.append(parent_dir)
+
+from app.Angular_momentum.angular_momentum import AngularMomentum
+
+
 
 def angular_momentum_operator_test(angular_momentum: AngularMomentum):
     l=angular_momentum.L
@@ -36,26 +42,25 @@ def angular_momentum_operator_test(angular_momentum: AngularMomentum):
         #Proper order with Levi-Civita=1
         diff= s1@s2 - s2@s1 -1.j*s3
         diff[np.absolute(diff)< 1e-6]=0
-
+        assert( ~np.any(diff))
         print("Testing if [S_%s,S_%s]=iS_%s"%(dir_names[i],dir_names[(i+1)%len(mats)],dir_names[(i+2)%len(mats)])," : ", ~np.any(diff))
 
         #Permutated order with Levi-Civita=-1
         diff2= s1@s3 - s3@s1 +1.j*s2
         diff2[np.absolute(diff2)< 1e-6]=0
+        assert( ~np.any(diff2))
         print("Testing if [S_%s,S_%s]=-iS_%s"%(dir_names[i],dir_names[(i+2)%len(mats)],dir_names[(i+1)%len(mats)])," : ", ~np.any(diff2))
-    
-if __name__=="__main__":
-    l_set=[0.5,1,2]
-    for l in l_set:
+
+import pytest    
+@pytest.mark.parametrize("l",[0.5,1,2])
+def test_Angular_momentum(l):   
         AngMom=AngularMomentum(l)
-        
-        print("\n ---> Testing for l=%.1f"%l)
         angular_momentum_operator_test(AngMom)
 
-
+'''
     AngMom=AngularMomentum(1.)
     AngMom.to_Cartesian()
     for key,value in AngMom:
         value[np.absolute(value)<1e-6]=0
         print("L_%s :\n"%key, value)
-        
+        '''
