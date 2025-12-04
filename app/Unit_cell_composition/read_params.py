@@ -96,17 +96,15 @@ def read_params_wrapper(param_file='params', wannier_in_file=None,unit_cell=None
     return immerse_params_in_composition(res_temp,unit_cell)
 
 
-def gen_template(wannier_in_file=None):
+def gen_template(wannier_in_file=None, out_dir=''):
     '''
     function generating an empty or filled with zeros
     properly defined params file
     '''
 
     unit_cell=composition_wrapper(wannier_in_file)
-    out_dir=''
-    if os.path.isdir('out'):
-        out_dir='out/'
-    with open(out_dir+'params','w') as f:
+    
+    with open(os.path.join(out_dir,'params'),'w') as f:
         f.write('#Name #x #y #z #m_r # m_theta #m_phi\n')
         f.write('begin magnetic-field\n')
         if wannier_in_file != None:

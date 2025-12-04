@@ -25,7 +25,9 @@ def timed_CH_JS(*filenames):
     res=CH_JS(*filenames)
     return res
 
-test_case_loc='test_cases/'
+
+dir=os.path.dirname(os.path.abspath(__file__))
+test_case_loc=os.path.join(dir,'test_cases')
 
 @pytest.mark.parametrize("func, file_name", [
     (timed_create_hamiltonian,'wannier90_up_hr.dat'),
@@ -35,7 +37,7 @@ test_case_loc='test_cases/'
         
     ])
 def test_read_file(func,file_name):
-    file_path=test_case_loc+file_name
+    file_path=os.path.join(test_case_loc,file_name)
     num_wann, nrpts = get_parameters(file_path)
     target_num_lines=nrpts*(2*num_wann)**2
     read_class=func(file_path)
@@ -43,7 +45,7 @@ def test_read_file(func,file_name):
 
 @pytest.mark.parametrize("file_name", ['wannier90_up_hr.dat'])
 def test_new_vs_old(file_name):
-    file_path=test_case_loc+file_name
+    file_path=os.path.join(test_case_loc,file_name)
     ## Compare with the old way
     read_new=create_hamiltonian(file_path)
     read_old=create_hamiltonian_original(file_path)
