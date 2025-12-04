@@ -2,7 +2,8 @@ import argparse
 import sys
 import os
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+curr_dir=os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(curr_dir))
 from app.Unit_cell_composition.Update_win_Ham import merged_with_SOC_wrapper
 from app.Unit_cell_composition.read_params import gen_template
 from app.Print.print_matrix import save_to_file
@@ -24,7 +25,7 @@ if __name__ == "__main__":
     files_to_merge = args.hr   # put hr file(s) in a list
     out_file= args.out
 
-    if(files_to_merge== None and (not os.path.isfile('./param'))):
+    if(files_to_merge== None and (not os.path.isfile(os.path.join(curr_dir,'param')))):
         gen_template(win_file)            
         exit("Generating a template param file")
     

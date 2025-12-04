@@ -10,12 +10,12 @@ class TestCases(unittest.TestCase):
     
     def test_col_out_of_range(self):
         with self.assertRaises(RuntimeError):
-            E1,D1=read_DOS(os.path.join(loc,"/dos.dat"), 110)
+            E1,D1=read_DOS(os.path.join(loc,"dos.dat"), 110)
 
 
     def test_file_doesnt_exist(self):
         with self.assertRaises(FileNotFoundError):
-            E1,E2=read_DOS(os.path.join(loc,"/foo.dat"),1)
+            E1,E2=read_DOS(os.path.join(loc,"foo.dat"),1)
 
     def test_compare_sets(self):
         E1,D1=read_DOS(os.path.join(loc,"dos.dat"), 1)
