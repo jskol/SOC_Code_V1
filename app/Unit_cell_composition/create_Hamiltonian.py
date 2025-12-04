@@ -58,6 +58,8 @@ def create_hamiltonian(*filenames):
 
 	spin_degeneracy = 2
 	num_wann, nrpts = get_parameters(spin_up_file)
+	print(spin_up_file, " ",num_wann," ", nrpts)
+	
 	skiplines = int(3 + np.ceil(nrpts/15.))
 
 	M_up = np.loadtxt(spin_up_file, skiprows=skiplines)
@@ -118,5 +120,5 @@ if (__name__=="__main__"):
 
 	num_wann, nrpts = get_parameters(file_name)
 	
-	for sets in merged:
-		print(sets.to_Wannier())
+	#for sets in merged:
+	#	print(sets.to_Wannier())

@@ -35,22 +35,23 @@ def compare_files(filename, output_file):
         #    exit()
     print("data in both files match")
 
-#if __name__=="__main__":
-test_case_loc='test_cases/'
-filename = test_case_loc+'wannier90_up_hr.dat'
-filename2 = test_case_loc+'wannier90_down_hr.dat'
-filename3 = test_case_loc+'wannier90_down_hr_broken_preambule.dat'
+test_case_loc = os.path.join(curr_dir, 'test_cases/')
+filename = os.path.join(test_case_loc, 'wannier90_up_hr.dat')
+filename2 = os.path.join(test_case_loc, 'wannier90_down_hr.dat')
+filename3 = os.path.join(test_case_loc, 'wannier90_down_hr_broken_preambule.dat')
 output_file = "output.dat"
 
 import pytest
 
 
-@pytest.mark.parametrize("f1,f2",[
+@pytest.mark.parametrize("f1, f2",[
     pytest.param(filename, filename,id="merging the same two files"),
     pytest.param(filename, filename2,id="marging the opposite spins"),
     pytest.param(filename, filename3,id="broken preambule",marks=pytest.mark.xfail)
     ])
 def test_marge(f1,f2):
+    assert os.path.isfile(f1)
+    assert os.path.isfile(f2)
     merged = create_hamiltonian(f1,f2)
     save_to_file(merged, [f1,f2], output_file)
     compare_files(f1, output_file)
