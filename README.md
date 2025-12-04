@@ -11,7 +11,7 @@ To run the code, just execute main.py with flags. For more information, run
 `python3 app/main.py -h`
 
 ## Requirements
-To run the code, one needs just Python (3.+) with NumPy.
+To run the code, one needs just Python (3.+) with NumPy and some basic modules (see requirements.txt).
 
 
 ## Contributors
