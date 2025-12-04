@@ -21,29 +21,24 @@ from UnitCell import get_L_from_orbitals_set_name
 sys.path.append('../app/SOC')
 from create_H_SOC import generate_H_SOC
 
-if __name__=="__main__":
-   
+### Carmine test #############
+S=AngularMomentum(0.5)
 
-    ### Carmine test #############
-    S=AngularMomentum(0.5)
-    P=AngularMomentum(1)
-    D=AngularMomentum(2)
-    P.to_Cartesian(['px','py','pz'])
-    D.to_Cartesian(['dyz','dxz','dxy'])
+def gen_SOC_Mat(l:int, orb_list:list[str])->np.ndarray:
+    L=AngularMomentum(l)
+    L.to_Cartesian(orb_list)
+    H_SOC_temp=np.kron(L.x(),S.x()) + np.kron(L.y(),S.y())+ np.kron(L.z(),S.z())
+    H_SOC_temp[np.absolute(H_SOC_temp)<1e-3]=0
+    return H_SOC_temp
 
-
-    H_SOC_DS = np.kron(D.x(),S.x()) + np.kron(D.y(),S.y())+ np.kron(D.z(),S.z())
-    H_SOC_PS = np.kron(P.x(),S.x()) + np.kron(P.y(),S.y())+ np.kron(P.z(),S.z())     
-    H_SOC_DS[np.absolute(H_SOC_DS)< 1e-3]=0
-    H_SOC_PS[np.absolute(H_SOC_PS)< 1e-3]=0
-
-    print("H_SOC (D-subspace):\n",H_SOC_DS)
-    print("H_SOC (P-subspace):\n",H_SOC_PS)
-    sum_mat=H_SOC_DS+H_SOC_PS
-    sum_mat[np.absolute(sum_mat)<1e-3]=0
-    if ~np.any(sum_mat):
-        print("is H_SOC(D) = -H_SOC(P): ", ~np.any(sum_mat), "\n\n") # <- Test From Carmine
-    else:
-        exit("Carmine test has FAILED!")
-    ###################################
+import pytest
+@pytest.mark.parametrize('M1, M2',[
+    pytest.param(gen_SOC_Mat(2,['dyz','dxz','dxy']), gen_SOC_Mat(1,['px','py','pz']),id="Right order"),
+    pytest.param(gen_SOC_Mat(2,['dxy','dyz','dxz']), gen_SOC_Mat(1,['px','py','pz']),id="Wrong order",marks=pytest.mark.xfail)
+    ])
+def test_subspace_equivalency(M1,M2):
+    sum_mat=M1+M2
+    sum_mat[np.absolute(sum_mat)<1e-3]=0 #Remove near-zeros
+    print(sum_mat)
+    assert ~np.any(sum_mat)
 
