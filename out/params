@@ -1,0 +1,14 @@
+#Name #x #y #z #m_r # m_theta #m_phi
+begin magnetic-field
+Te 0.3333333333 0.6666666667 0.25 0 0 0
+Te 0.6666666667 0.3333333333 0.75 0 0 0
+Mn 0.0 0.0 0.0 0 0 0
+Mn 0.0 0.0 0.5 0 0 0
+end magnetic-field
+#Name #x #y #z #lambda_SOC
+begin SOC
+Te 0.3333333333 0.6666666667 0.25 0
+Te 0.6666666667 0.3333333333 0.75 0
+Mn 0.0 0.0 0.0 0
+Mn 0.0 0.0 0.5 0
+end SOC
