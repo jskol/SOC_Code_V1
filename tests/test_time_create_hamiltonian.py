@@ -6,12 +6,12 @@ from termcolor import colored
 
 curr_dir=os.path.dirname(os.path.abspath(__file__)) #
 parent_dir = os.path.dirname(curr_dir)
-sys.path.append(curr_dir)
+sys.path.append(parent_dir)
 from app.Trash.create_hamiltonian_class_solution import create_hamiltonian as CH_JS
 from app.Trash.create_hamiltonian import create_hamiltonian_original
 from app.Unit_cell_composition.create_Hamiltonian import create_hamiltonian
 
-test_case_loc='test_cases/'
+test_case_loc=curr_dir+'/test_cases/'
 filename=test_case_loc+'wannier90_up_hr.dat'
 
 func_names=[create_hamiltonian_original,create_hamiltonian, CH_JS]
