@@ -3,3 +3,4 @@ __pycache__/
 *.py[codz]
 app/test_cases/
 .cache/
+.pytest_cache

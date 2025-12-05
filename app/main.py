@@ -21,11 +21,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     win_file = args.win
-    param_file = args.param
+    param_file = os.path.join(os.getcwd(),args.param)
     files_to_merge = args.hr   # put hr file(s) in a list
     out_file= args.out
 
-    if(files_to_merge== None and (not os.path.isfile(os.path.join(curr_dir,'param')))):
+    if(files_to_merge== None and (not os.path.isfile(os.path.join(os.getcwd(),'param')))):
         gen_template(win_file)            
         exit("Generating a template param file")
     
@@ -41,7 +41,6 @@ if __name__ == "__main__":
             exit("Could not find ", param_file)
         
         ## If all is good run the calculations
-
         result = merged_with_SOC_wrapper([win_file], param_file, files_to_merge)
         save_to_file(result, files_to_merge, out_file)
 
