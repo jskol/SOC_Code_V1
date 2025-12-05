@@ -4,3 +4,4 @@ __pycache__/
 app/test_cases/
 .cache/
 .pytest_cache
+*.xml

@@ -32,4 +32,4 @@ jobs:
                 
             - name: Run pytest
               run: |
-                python -m pytest -q
+                python -m pytest -q --junitxml=result.xml
