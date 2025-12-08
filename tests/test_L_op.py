@@ -7,6 +7,7 @@ parent_dir = os.path.dirname(curr_dir)
 sys.path.append(parent_dir)
 
 from app.Angular_momentum.angular_momentum import AngularMomentum
+from app.Angular_momentum.generate_T_mat import generate_T_mat,WrongOrbital,OrbitalsNotDefined
 
 
 
@@ -57,10 +58,15 @@ def test_Angular_momentum(l):
         AngMom=AngularMomentum(l)
         angular_momentum_operator_test(AngMom)
 
-'''
-    AngMom=AngularMomentum(1.)
-    AngMom.to_Cartesian()
-    for key,value in AngMom:
-        value[np.absolute(value)<1e-6]=0
-        print("L_%s :\n"%key, value)
-        '''
+
+test_cases_for_T_mat=[
+     (1,['pz','px','py']),
+     (1,['px','py','pz']),
+     pytest.param(1,['px','dz2'], marks=pytest.mark.xfail(raises=WrongOrbital,reason=" Wrong orbital for given l")),
+     pytest.param(14,['px','dz2'], marks=pytest.mark.xfail(raises=OrbitalsNotDefined,reason=" Orbital not (yet) defined"))
+]
+
+@pytest.mark.parametrize("l, orb_list",test_cases_for_T_mat)
+def test_gen_T_matrix(l,orb_list):
+     generate_T_mat(l,orb_list)
+     assert True

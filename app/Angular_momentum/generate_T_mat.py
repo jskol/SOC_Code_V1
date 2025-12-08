@@ -1,6 +1,11 @@
 import numpy as np
 import sys
 
+class WrongOrbital(Exception):
+	pass
+class OrbitalsNotDefined(Exception):
+	pass
+
 def generate_T_mat(l :float):
 	'''
 	Function returns a transfer matrix from
@@ -36,7 +41,7 @@ def generate_T_mat(l :float):
 			(1.j/np.sqrt(2),0.,0.,0.,-1.j/np.sqrt(2)) #d_xy
 		),dtype=np.complex128)
 	else:
-		sys.exit("Undefind l-subspace") ## Handle this issue
+		raise OrbitalsNotDefined("Orbital with l=%i are not implemented"%l)
 	return res
 
 
@@ -78,7 +83,8 @@ def generate_T_mat(l :float,*list_of_orbitals):
 					res.append(res_temp[0,:])
 
 				else:
-					exit('wrong orbital type: %s'%orb)
+					raise WrongOrbital("Orbital %s is not in l=%i subspace"%(orb, l))
+					#exit('wrong orbital type: %s'%orb)
 			res=np.array(res,dtype=np.complex128)
 	elif l==2:
 		'''
@@ -108,11 +114,12 @@ def generate_T_mat(l :float,*list_of_orbitals):
 				elif orb=='dxy':
 					res.append(res_temp[4,:])
 				else:
-					exit('wrong orbital type: %s'%orb)
+					raise WrongOrbital("Orbital %s is not in l=%i subspace"%(orb, l))
+					#exit('wrong orbital type: %s'%orb)
 			res=np.array(res,dtype=np.complex128)
 
 	else:
-		sys.exit("Undefind l-subspace") ## Handle this issue
+		raise OrbitalsNotDefined("Orbitals with l=%i are not defined"%l)
 	return res
 
 
