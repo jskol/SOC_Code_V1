@@ -31,7 +31,10 @@ class AngularMomentum:
         print("\nIn the L=%.1f subspace angular momentum operators are given by"%self.L)
         for name,mat in self.basis.items():
             mat_temp=mat
-            mat_temp[np.absolute(mat_temp)<1e-3]=0
+            #mat_temp[np.absolute(mat_temp)<1e-3]=0
+            for x in np.nditer(mat_temp):
+                if np.absolute(x)<1e-3:
+                    x=0
             print("L_%s:\n"%name, mat_temp)
     
 
@@ -42,9 +45,13 @@ class AngularMomentum:
         to the Cartesian space
         '''
         if self.L != 0.5:
-            T_mat=np.matrix(generate_T_mat(self.L,*projector_set))
+            #T_mat=np.matrix(generate_T_mat(self.L,*projector_set))
+            T_mat=generate_T_mat(self.L,*projector_set)
+            T_mat_H=np.transpose(np.conjugate(T_mat))
+
             for name,mat in self.basis.items():
-                self.basis[name]=T_mat@mat@T_mat.H
+                #self.basis[name]=T_mat@mat@T_mat.H
+                self.basis[name]=T_mat@ mat @T_mat_H
 
     def x(self):
         return self.basis['x'] 
