@@ -12,7 +12,7 @@ from app.Unit_cell_composition.read_win import composition_wrapper
     pytest.param("params_3_atoms","wannier90_2_atoms.win",marks=pytest.mark.xfail(raises=FileNotFoundError,reason="Non-existing file passed"))
 ])
 def test_read_params(param_file,composition_file):
-    test_case_loc=os.path.join(os.getcwd(),'test_cases/')
+    test_case_loc=os.path.join(os.getcwd(),'tests','test_cases/')
     res=read_params(os.path.join(test_case_loc,param_file))
     comp=composition_wrapper(os.path.join(test_case_loc,composition_file))
     print("\nPrint prams\n")
