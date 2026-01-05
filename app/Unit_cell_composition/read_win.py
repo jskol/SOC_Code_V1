@@ -21,9 +21,9 @@ def return_orb_set(name :str)->list:
         if (name =='s') or (name == 'l=0'):
             return ['s']
         elif ((name == 'p') or (name == 'l=1')):
-            return ['px','py','pz']
+            return ['pz','px','py']
         elif ((name== 'd') or (name == 'l=2')):
-            return ['dxy','dyz','dxz','dx2-y2','dz2']
+            return ['dz2','dxz','dyz','dx2-y2','dxy']
         else:
             return [name]
     else:

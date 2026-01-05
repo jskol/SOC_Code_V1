@@ -56,7 +56,10 @@ def get_L_from_orbitals_set_name(orb_list:list[str])-> int:
 
 class UnitCell:
     '''
-    An object containing set of Atoms
+    An object containing set of Atoms 
+    (not preferred in Python to have a collection class as iterator
+    because once the iterator can reach the end only once
+    unless its  ddefined otehrwsie in __iter__)
     '''
     def __init__(self,list_of_atoms=[]):
         self.composition=[] # List allows for duplicates
