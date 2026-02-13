@@ -3,6 +3,3 @@
     -> MB: funnction miniminiznig the energy of the system H_TB+H_SOC (np.linalg.eigvalsh(H_TB+H_SOC))
     -> For  now MB focus on miniminizng H_SOC alone. 
     -> H_SOC from generate H_SOC and use tests/test_cases/params_2_atoms
-
-
-     
