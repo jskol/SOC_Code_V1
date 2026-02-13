@@ -3,6 +3,7 @@ import re
 from itertools import islice
 import time
 from termcolor import colored
+import os
 
 class Wannier_data:
 	def __init__(self,argv):
@@ -44,21 +45,27 @@ def create_hamiltonian(*filenames):
 	3) two source files-> 1st one for spin-up second for spin-down
 	'''
 	if (len(filenames) == 1):
+		print("Using the same TB parameters for each spin chanel")
 		spin_up_file = filenames[0]
 		spin_down_file = filenames[0]
 	elif (len(filenames) == 2):
 		spin_up_file = filenames[0]
 		spin_down_file = filenames[1]
 	elif(len(filenames)==0):
-		spin_up_file ="wannier90_hr.dat"
-		spin_down_file ="wannier90_hr.dat"	
+		default_name='wannier90_hr.dat'
+		print(f'Using default names for both spin-channels ->{default_name}')
+
+		if not os.path.exists(default_name):
+			raise FileNotFoundError(f'{default_name} does not exist')
+
+		spin_up_file =default_name
+		spin_down_file =default_name	
 	else:
-		print("error")
-		exit(1)
+		raise IndexError("Too many files passed (max 2)")
 
 	spin_degeneracy = 2
 	num_wann, nrpts = get_parameters(spin_up_file)
-	print(spin_up_file, " ",num_wann," ", nrpts)
+	print(f'Reading data from ({spin_up_file},{spin_down_file}) with #wannier={num_wann} and #r-points={nrpts} ' ,end ='... ')
 	
 	skiplines = int(3 + np.ceil(nrpts/15.))
 
@@ -110,13 +117,16 @@ def create_hamiltonian(*filenames):
 			for elem in col:
 				res.append(elem)
 			col = []
+	print("DONE")
 	return res
 
 if (__name__=="__main__"):
 
-	file_name='../../tests/test_cases/wannier90_up_hr.dat'
-	file_name2='../../tests/test_cases/wannier90_down_hr.dat'
+	file_name='tests/test_cases/wannier90_up_hr.dat'
+	file_name2='tests/test_cases/wannier90_down_hr.dat'
 	merged=create_hamiltonian(file_name, file_name2)
+	for elm in merged:
+		print(elm)
 
 	num_wann, nrpts = get_parameters(file_name)
 	
