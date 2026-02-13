@@ -71,7 +71,12 @@ def add_magnetic_field(H_SOC, params, comp)-> None:
                 l=get_L_from_orbitals_set_name(l_subspace)
                 L_op_set = AngularMomentum(l)
                 L_op_set.to_Cartesian(l_subspace)
-                id_mat = np.eye(L_op_set.x().shape[0])
+                #print(f'problematic part l={l}, {L_op_set.x()} {type(L_op_set.x())} {L_op_set.x().shape}')
+                if l==0:
+                    id_mat=np.eye(1)
+                else:
+                    id_mat = np.eye(L_op_set.x().shape[0])
+
 
                 H_MAG_in_L_subspace=np.kron(id_mat,S_Pauli.x()*mag_field_x)+np.kron(id_mat,S_Pauli.y()*mag_field_y)+np.kron(id_mat,S_Pauli.z()*mag_field_z)
                 for i in np.arange(H_MAG_in_L_subspace.shape[0]):            
@@ -89,8 +94,7 @@ def generate_H_SOC(filenames=[], params={}, print_details=False)-> np.ndarray:
     elif (len(filenames) == 1):	#if we pas 1 file, both are the same
         win_file = filenames[0]
     else:						#in other cases we have error
-        print("error - file")
-        exit(1)
+       raise IndexError("Too many win-files passed")
 
     S_Pauli = AngularMomentum(0.5)
     spin_degeneracy = S_Pauli.x().shape[0]

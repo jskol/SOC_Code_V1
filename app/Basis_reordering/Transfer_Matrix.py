@@ -21,8 +21,7 @@ def Trasfer_Matrix(filenames=[],print_details=False)->np.matrix:
     elif (len(filenames) == 1):	#if we pas 1 file, both are the same
         win_file = filenames[0]
     else:						#in other cases we have error
-        print("error - file")
-        exit(1)
+        raise IndexError("Too many files passed to the Transfer matrix generator")
 
     comp = {}
     comp = composition_wrapper(win_file)
@@ -72,9 +71,8 @@ def Trasfer_Matrix_spinful(filenames=[],print_details=False)->np.matrix:
     elif (len(filenames) == 1):	#if we pas 1 file, both are the same
         win_file = filenames[0]
     else:						#in other cases we have error
-        print("error - file")
-        exit(1)
-
+       raise IndexError("Too many files passed to the Transfer matrix generator")
+    
     comp = {}
     comp = composition_wrapper(win_file)
     if print_details:
