@@ -49,7 +49,7 @@ class EnergyMinimizerParams:
         self.TB_params=TBHamiltonian(self.win_file,*hr_files_list) #this holds the full information on TB model-> takes long to read so do it once
 
 
-def Energy_minimizer(params:EnergyMinimizerParams)->np.ndarray:
+def Energy_minimizer(params:EnergyMinimizerParams,fixed_k:False)->np.ndarray:
 
     initial_param=read_params_wrapper(param_file=params.param_file, wannier_in_file=params.win_file) # get parameters to H_SOC
     H_SOC= generate_H_SOC([params.win_file],initial_param)   # generate H_SOC (with optional local magnetic field)
@@ -57,7 +57,10 @@ def Energy_minimizer(params:EnergyMinimizerParams)->np.ndarray:
     H_SOC_2=T_mat@H_SOC@T_mat.T              # transfer H_SOC to proper basis (orbital-major)
     
     #### Here should be the logic for minimization ####
-    k_vec_list=read_k_space(params.win_file)
+    if fixed_k:
+        k_vec_list=[np.zeros(3)]
+    else:
+        k_vec_list=read_k_space(params.win_file)
     energies=[]
     for k_it,k_vec in enumerate(k_vec_list):
         print(f'doing {k_it}/{len(k_vec_list)}')
@@ -67,6 +70,8 @@ def Energy_minimizer(params:EnergyMinimizerParams)->np.ndarray:
     return energies
 
 
+
+
 if __name__=="__main__":
     win_file='tests/test_cases/wannier90.win'
     hr_file_name='tests/test_cases/wannier90_up_hr.dat'
@@ -74,5 +79,5 @@ if __name__=="__main__":
     param_name='tests/test_cases/params'
     params=EnergyMinimizerParams(win_file,param_name,None,[hr_file_name])
     params.k_space=np.zeros(3)
-    res=Energy_minimizer(params)
+    res=Energy_minimizer(params,True)
     print(np.array(res)[:,0])
