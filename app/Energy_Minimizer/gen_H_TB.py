@@ -24,9 +24,9 @@ class TBHamiltonian:
         if not os.path.exists(win_file):
             raise FileNotFoundError(f'{win_file} was not found, check where you are')
         print(f'Reading compositon from {win_file}')
-        comp=composition_wrapper(win_file)
-        self.comp=comp
-        self.hoppings=merged
+        self.comp=composition_wrapper(win_file)
+        print("Truncating zero-valued hopping elements")
+        self.hoppings=list(filter(lambda x: np.abs(x.hop)>1e-5,merged))
 
 
 def generate_H_TB(win_file:str=None,*hr_files):

@@ -1,9 +1,8 @@
 import numpy as np 
 import sys,os
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Unit_cell_composition'))
- 
-from read_win import composition_wrapper
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent.parent))
+from app.Unit_cell_composition.read_win import composition_wrapper
 
 def Trasfer_Matrix(filenames=[],print_details=False)->np.matrix:
     '''

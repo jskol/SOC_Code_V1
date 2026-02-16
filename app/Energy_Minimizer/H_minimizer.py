@@ -13,6 +13,7 @@ from app.Basis_reordering.Transfer_Matrix import Trasfer_Matrix_spinful
  # helper function to transorm natural basis for SOC to wannier (orbital-major) orgering
 from app.Unit_cell_composition.read_params import read_params_wrapper
 #helper to read model parameters from a file
+from app.Unit_cell_composition.read_k_space import read_k_space
 
 class MagneticGroup:
     pass
@@ -50,17 +51,20 @@ class EnergyMinimizerParams:
 
 def Energy_minimizer(params:EnergyMinimizerParams)->np.ndarray:
 
-    H=generate_H_TB_k_dep(params.TB_params,k_vec=params.k_space)
     initial_param=read_params_wrapper(param_file=params.param_file, wannier_in_file=params.win_file) # get parameters to H_SOC
-    
     H_SOC= generate_H_SOC([params.win_file],initial_param)   # generate H_SOC (with optional local magnetic field)
     T_mat=Trasfer_Matrix_spinful([params.win_file])   # generate transfer matrix
     H_SOC_2=T_mat@H_SOC@T_mat.T              # transfer H_SOC to proper basis (orbital-major)
     
     #### Here should be the logic for minimization ####
-
+    k_vec_list=read_k_space(params.win_file)
+    energies=[]
+    for k_it,k_vec in enumerate(k_vec_list):
+        print(f'doing {k_it}/{len(k_vec_list)}')
+        H=generate_H_TB_k_dep(params.TB_params,k_vec)+H_SOC_2
+        energies.append(np.linalg.eigvalsh(H))
     ####################################################
-    return H+H_SOC_2
+    return energies
 
 
 if __name__=="__main__":
@@ -71,5 +75,4 @@ if __name__=="__main__":
     params=EnergyMinimizerParams(win_file,param_name,None,[hr_file_name])
     params.k_space=np.zeros(3)
     res=Energy_minimizer(params)
-    print(res.shape)
-    print(f'first 5 eigenvalues= {np.linalg.eigvalsh(res)[:5]}')
+    print(np.array(res)[:,0])
