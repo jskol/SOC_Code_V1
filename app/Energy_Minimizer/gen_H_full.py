@@ -5,7 +5,7 @@ app_dir=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(app_dir)
 
 
-from Energy_Minimizer.gen_H_TB import generate_H_TB 
+from Energy_Minimizer.gen_H_TB import generate_H_TB_k_dep,TBHamiltonian
 # To get tight-binding hamiltonia
 
 from SOC.create_H_SOC import generate_H_SOC 
@@ -34,7 +34,9 @@ def generate_H_Full(win_file:str=None,param_file:str='params',*hr_files)->np.nda
         print('Using default param file')
         param_file='params'
 
-    H=generate_H_TB(win_file,*hr_files)
+    
+    TBparams=TBHamiltonian(win_file,*hr_files)
+    H=generate_H_TB_k_dep(TBparams,np.zeros(3)) # Here we assume r=0 in the phase factor of the F.T. 
     
     params=read_params_wrapper(param_file=param_file, wannier_in_file=win_file) # get parameters to H_SOC
     H_SOC= generate_H_SOC([win_file],params)   # generate H_SOC (with optional local magnetic field)

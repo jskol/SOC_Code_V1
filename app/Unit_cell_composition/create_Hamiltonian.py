@@ -47,14 +47,22 @@ def create_hamiltonian(*filenames):
 	if (len(filenames) == 1):
 		print("Using the same TB parameters for each spin chanel")
 		spin_up_file = filenames[0]
+		if not os.path.exists(spin_up_file):
+			raise FileNotFoundError(f"File with TB Hamiltonian for the spin=up is missing")
 		spin_down_file = filenames[0]
+	
 	elif (len(filenames) == 2):
 		spin_up_file = filenames[0]
+		if not os.path.exists(spin_up_file):
+			raise FileNotFoundError(f"File with TB Hamiltonian for the spin=up is missing")
+		
 		spin_down_file = filenames[1]
+		if not os.path.exists(spin_down_file):
+			raise FileNotFoundError(f"File with TB Hamiltonian for the spin=down is missing")
+
 	elif(len(filenames)==0):
 		default_name='wannier90_hr.dat'
 		print(f'Using default names for both spin-channels ->{default_name}')
-
 		if not os.path.exists(default_name):
 			raise FileNotFoundError(f'{default_name} does not exist')
 
@@ -62,6 +70,7 @@ def create_hamiltonian(*filenames):
 		spin_down_file =default_name	
 	else:
 		raise IndexError("Too many files passed (max 2)")
+
 
 	spin_degeneracy = 2
 	num_wann, nrpts = get_parameters(spin_up_file)
