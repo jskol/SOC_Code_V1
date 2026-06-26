@@ -17,4 +17,18 @@ To run the code, one needs just Python (3.+) with NumPy and some basic modules (
 ## Contributors
 This project was developed by MagTop members: Jan Skolimowski, Carmine Autieri, Kamil Jamroszczyk and Mathews Benny
 
+##Citation
 
+Please cite both the GitHub repository and the accompanying publication in any work that makes use of this code. Proper citation helps acknowledge the software implementation as well as the scientific methodology underlying it.
+
+Software
+
+Jan Skolimowski, Carmine Autieri, Kamil Jamroszczyk and Mathews Benny, SOC_Code_V1. GitHub Repository.
+
+Repository: https://github.com/jskol/SOC_Code_V1
+
+Publication
+
+Mathews Benny, Xujia Gong, Kamil Jamroszczyk, Amar Fakhredine, Giuseppe Cuono, Rajibul Islam, Jan Skolimowski, and Carmine Autieri
+Phys. Rev. B.
+DOI : https://doi.org/10.1103/rjg7-n1tc
